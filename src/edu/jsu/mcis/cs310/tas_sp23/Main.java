@@ -1,6 +1,3 @@
-//Nidhi Chauhan(ScrumMaster)
-
-
 package edu.jsu.mcis.cs310.tas_sp23;
 
 import edu.jsu.mcis.cs310.tas_sp23.dao.BadgeDAO;
@@ -15,6 +12,7 @@ public class Main {
     public static void main(String[] args) {
         
         // test database connectivity; get DAOs
+        // Nidhi Chauhan
 
         DAOFactory daoFactory = new DAOFactory("tas.jdbc");
         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
