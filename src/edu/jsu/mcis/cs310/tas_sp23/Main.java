@@ -1,3 +1,4 @@
+// Kilroy was here
 package edu.jsu.mcis.cs310.tas_sp23;
 
 import edu.jsu.mcis.cs310.tas_sp23.dao.BadgeDAO;
@@ -8,11 +9,16 @@ import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
 //Cade Hardin
 
+// Kolton Guthrie
+
+// Matthew Hayes
+
 public class Main {
 
     public static void main(String[] args) {
         
         // test database connectivity; get DAOs
+        // Nidhi Chauhan
 
         DAOFactory daoFactory = new DAOFactory("tas.jdbc");
         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
