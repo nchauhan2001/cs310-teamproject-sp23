@@ -14,11 +14,12 @@ import java.time.format.DateTimeFormatter;
 // Matthew Hayes
 
 public class Main {
-
+    
+// Nidhi Chauhan
+    
     public static void main(String[] args) {
         
         // test database connectivity; get DAOs
-// Nidhi Chauhan
 
         DAOFactory daoFactory = new DAOFactory("tas.jdbc");
         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
