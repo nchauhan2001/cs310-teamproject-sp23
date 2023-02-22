@@ -1,4 +1,3 @@
-// Kilroy was here
 package edu.jsu.mcis.cs310.tas_sp23;
 
 import edu.jsu.mcis.cs310.tas_sp23.dao.BadgeDAO;
@@ -13,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 // Matthew Hayes
 
+//Logan Driver
 public class Main {
     
 // Nidhi Chauhan
