@@ -14,17 +14,18 @@ import java.time.format.DateTimeFormatter;
 
 //Logan Driver
 public class Main {
-
+    
+// Nidhi Chauhan: ScrumMaster
+    
     public static void main(String[] args) {
         
         // test database connectivity; get DAOs
-        // Nidhi Chauhan
 
         DAOFactory daoFactory = new DAOFactory("tas.jdbc");
         BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
         
         // find badge
-
+        
         Badge b = badgeDAO.find("31A25435");
         
         // output should be "Test Badge: #31A25435 (Munday, Paul J)"
