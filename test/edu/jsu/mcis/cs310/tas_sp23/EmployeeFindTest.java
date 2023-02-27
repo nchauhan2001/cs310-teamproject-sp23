@@ -82,12 +82,12 @@ public class EmployeeFindTest {
     }
     
     @Test 
-    public void testFindEmployee4() {
+    public void testFindEmployee5() {
         
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
         
         Employee e5 = EmployeeDAO.find(115);
         
-        assertEquals("ID #115: Insert DB info here",e5.toString());
+        assertEquals("ID #115: Insert other DB info here",e5.toString());
     }
 }
