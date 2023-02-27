@@ -36,6 +36,10 @@ public final class DAOFactory {
         return new BadgeDAO(this);
     }
     
+    public PunchDAO getPunchDAO() {
+        return new PunchDAO(this);
+    }
+    
     public DepartmentDAO getDepartmentDAO() {
         return new DepartmentDAO(this);
     }
