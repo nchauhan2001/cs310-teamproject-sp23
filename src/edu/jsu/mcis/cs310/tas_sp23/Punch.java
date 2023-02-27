@@ -88,22 +88,7 @@ public class Punch {
 
     // prints the original punch details to console
     public String printOriginal() {
-        String punchTypeString;
-        switch (eventType) {
-            case CLOCK_IN:
-                punchTypeString = "CLOCK IN";
-                break;
-            case CLOCK_OUT:
-                punchTypeString = "CLOCK OUT";
-                break;
-            case TIME_OUT:
-                punchTypeString = "TIME OUT";
-                break;
-            default:
-                punchTypeString = "UNKNOWN";
-                break;
-        }
-        
+
         // Formats the date in the correct format
         // E: day-of-week MM: month-of-year / dd: day-of-month / yyyy: year-of-era
         // HH: hour-of-day (0-23) | mm: minute-of-hour | ss: second-of-minute
@@ -113,7 +98,7 @@ public class Punch {
         StringBuilder s = new StringBuilder();
         
         s.append('#').append(badge.getId()).append(' ');
-        s.append(punchTypeString).append(": ");
+        s.append(eventType.toString()).append(": ");
         s.append(date);
         
         return s.toString(); 
