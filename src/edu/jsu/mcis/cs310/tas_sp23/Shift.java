@@ -21,7 +21,6 @@ public class Shift {
         this.shiftduration = Duration.between(startTime, stopTime);
     }
 
-    // WEBHOOK TEST
 
     public LocalTime getStartTime() {
         return startTime;
