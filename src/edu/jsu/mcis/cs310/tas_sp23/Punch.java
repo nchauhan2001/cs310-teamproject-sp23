@@ -12,6 +12,7 @@ import static edu.jsu.mcis.cs310.tas_sp23.EventType.CLOCK_IN;
 import static edu.jsu.mcis.cs310.tas_sp23.EventType.CLOCK_OUT;
 import static edu.jsu.mcis.cs310.tas_sp23.EventType.TIME_OUT;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Punch {
 
@@ -86,7 +87,7 @@ public class Punch {
     }
 
     // prints the original punch details to console
-    public void printOriginal() {
+    public String printOriginal() {
         String punchTypeString;
         switch (eventType) {
             case CLOCK_IN:
@@ -102,13 +103,26 @@ public class Punch {
                 punchTypeString = "UNKNOWN";
                 break;
         }
-        System.out.println("#" + badge.getId() + " " + punchTypeString + ": " + originalTimestamp.toString());
+        
+        // Formats the date in the correct format
+        // E: day-of-week MM: month-of-year / dd: day-of-month / yyyy: year-of-era
+        // HH: hour-of-day (0-23) | mm: minute-of-hour | ss: second-of-minute
+        // Docs: https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html
+        final String date = DateTimeFormatter.ofPattern("E MM/dd/yyyy HH:mm:ss").format(originalTimestamp).toUpperCase();
+        
+        StringBuilder s = new StringBuilder();
+        
+        s.append('#').append(badge.getId()).append(' ');
+        s.append(punchTypeString).append(": ");
+        s.append(date);
+        
+        return s.toString(); 
+        
     }
 
     // overrides toString() method to print original punch details
     @Override
     public String toString() {
-        printOriginal();
-        return "";
+        return printOriginal();
     }
 }
