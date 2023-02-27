@@ -12,6 +12,7 @@ import static edu.jsu.mcis.cs310.tas_sp23.EventType.CLOCK_IN;
 import static edu.jsu.mcis.cs310.tas_sp23.EventType.CLOCK_OUT;
 import static edu.jsu.mcis.cs310.tas_sp23.EventType.TIME_OUT;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Punch {
 
@@ -31,6 +32,17 @@ public class Punch {
         this.eventType = eventType;
         this.originalTimestamp = LocalDateTime.now();
         this.id = null;
+        this.adjustedTimestamp = null;
+        this.adjustmentType = null;
+    }
+    
+    // Second constructor which takes an int id
+    public Punch(int id, int terminalId, Badge badge, LocalDateTime origTimestamp, EventType eventType) {
+        this.terminalId = terminalId;
+        this.badge = badge;
+        this.eventType = eventType;
+        this.originalTimestamp = origTimestamp;
+        this.id = String.valueOf(id);
         this.adjustedTimestamp = null;
         this.adjustmentType = null;
     }
@@ -75,29 +87,27 @@ public class Punch {
     }
 
     // prints the original punch details to console
-    public void printOriginal() {
-        String punchTypeString;
-        switch (eventType) {
-            case CLOCK_IN:
-                punchTypeString = "CLOCK IN";
-                break;
-            case CLOCK_OUT:
-                punchTypeString = "CLOCK OUT";
-                break;
-            case TIME_OUT:
-                punchTypeString = "TIME OUT";
-                break;
-            default:
-                punchTypeString = "UNKNOWN";
-                break;
-        }
-        System.out.println("#" + badge.getId() + " " + punchTypeString + ": " + originalTimestamp.toString());
+    public String printOriginal() {
+
+        // Formats the date in the correct format
+        // E: day-of-week MM: month-of-year / dd: day-of-month / yyyy: year-of-era
+        // HH: hour-of-day (0-23) | mm: minute-of-hour | ss: second-of-minute
+        // Docs: https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html
+        final String date = DateTimeFormatter.ofPattern("E MM/dd/yyyy HH:mm:ss").format(originalTimestamp).toUpperCase();
+        
+        StringBuilder s = new StringBuilder();
+        
+        s.append('#').append(badge.getId()).append(' ');
+        s.append(eventType.toString()).append(": ");
+        s.append(date);
+        
+        return s.toString(); 
+        
     }
 
     // overrides toString() method to print original punch details
     @Override
     public String toString() {
-        printOriginal();
-        return "";
+        return printOriginal();
     }
 }

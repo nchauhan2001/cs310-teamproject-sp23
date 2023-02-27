@@ -9,10 +9,7 @@ import java.util.Objects;
 
 public class PunchDAO {
     
-    // also selecting eventtype to use the descriptions when determining which type of event
-    // since there's two "id" columns in this query, event.id points to the id from event
-    // and eventtype.id points to the id from eventtype
-    private static final String QUERY_FIND = "SELECT * FROM event, eventtype where event.id = ?";
+    private static final String QUERY_FIND = "SELECT * FROM event where id = ?";
     
     private final DAOFactory daoFactory;
 
@@ -52,27 +49,11 @@ public class PunchDAO {
                         Badge badge = new Badge(badgeid, null);
                         
                         LocalDateTime origTimestamp = rs.getTimestamp("timestamp").toLocalDateTime();
-                        Integer eventtype = rs.getInt("eventtypeid");
-                        Integer eventtypeid = rs.getInt("eventtype.id");
+                        Integer eventtypeid = rs.getInt("eventtypeid");
                         
-                        EventType punchtype;
+                        EventType punchtype = EventType.values()[eventtypeid];
 
-                        if (eventtype == eventtypeid){
-                            String eventDescription = rs.getString("description");
-                            
-                            switch (eventDescription) {
-                                case "Clock-In Punch":
-                                    punchtype = EventType.CLOCK_IN;
-                                    break;
-                                case "Clock-Out Punch":
-                                    punchtype = EventType.CLOCK_OUT;
-                                    break;
-                                default:
-                                    punchtype = EventType.TIME_OUT;
-                                    break;
-                            }
-                            punch = new Punch(id, termid, badge, origTimestamp, punchtype);
-                        }
+                        punch = new Punch(id, termid, badge, origTimestamp, punchtype);
                     }
                 }
             }
