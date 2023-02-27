@@ -73,4 +73,31 @@ public class PunchFindTest {
 
     }
     
+    @Test
+    public void testFindPunches4(){
+        
+        PunchDAO punchDAO = daoFactory.getPunchDAO();
+        
+        Punch p10 = punchDAO.find(/* code*/);
+        Punch p11 = punchDAO.find(/*code */);
+        Punch p12 = punchDAO.find(/* code*/);
+        
+        assertEquals("", p10.printOriginal());
+        assertEquals("", p11.printOriginal());
+        assertEquals("", p12.printOriginal());
+    }
+    
+    @Test
+    public void testFindPunches5(){
+        
+        PunchDAO punchDAO = daoFactory.getPunchDAO();
+        
+        Punch p13 = punchDAO.find(/* code*/);
+        Punch p14 = punchDAO.find(/* code*/);
+        Punch p15 = punchDAO.find(/* code*/);
+        
+        assertEquals("", p13.printOriginal());
+        assertEquals("", p14.printOriginal());
+        assertEquals("", p15.printOriginal());
+    }
 }
