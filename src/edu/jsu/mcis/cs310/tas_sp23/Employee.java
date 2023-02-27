@@ -76,7 +76,7 @@ public class Employee {
         StringBuilder s = new StringBuilder();
 
         s.append("ID #").append(id).append(": ");
-        s.append(lastName).append(", ").append(firstName).append(" ").append(middleName);
+        s.append(badge.getDescription());
         s.append(" (#").append(badge.getId()).append("), ");
         s.append("Type: ").append(employeeType.toString()).append(", ");
         s.append("Department: ").append(department.getDescription()).append(", ");
