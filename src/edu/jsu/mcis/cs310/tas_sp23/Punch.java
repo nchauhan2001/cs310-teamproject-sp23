@@ -34,6 +34,17 @@ public class Punch {
         this.adjustedTimestamp = null;
         this.adjustmentType = null;
     }
+    
+    // Second constructor which takes an int id
+    public Punch(int id, int terminalId, Badge badge, LocalDateTime origTimestamp, EventType eventType) {
+        this.terminalId = terminalId;
+        this.badge = badge;
+        this.eventType = eventType;
+        this.originalTimestamp = origTimestamp;
+        this.id = String.valueOf(id);
+        this.adjustedTimestamp = null;
+        this.adjustmentType = null;
+    }
 
     // getters for all instance fields
     public int getTerminalId() {
