@@ -81,4 +81,13 @@ public class EmployeeFindTest {
 
     }
     
+    @Test 
+    public void testFindEmployee4() {
+        
+        EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
+        
+        Employee e5 = EmployeeDAO.find(115);
+        
+        assertEquals("ID #115: Insert DB info here",e5.toString());
+    }
 }
