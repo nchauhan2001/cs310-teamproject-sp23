@@ -5,7 +5,6 @@ import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 public class PunchDAO {
     
@@ -42,11 +41,13 @@ public class PunchDAO {
 
                     while (rs.next()) {
                         
-                        id = rs.getInt("event.id");
+                        id = rs.getInt("id");
                         Integer termid = rs.getInt("terminalid");
                         
                         String badgeid = rs.getString("badgeid");
-                        Badge badge = new Badge(badgeid, null);
+                        
+                        BadgeDAO badgedao = daoFactory.getBadgeDAO();
+                        Badge badge = badgedao.find(badgeid);
                         
                         LocalDateTime origTimestamp = rs.getTimestamp("timestamp").toLocalDateTime();
                         Integer eventtypeid = rs.getInt("eventtypeid");
