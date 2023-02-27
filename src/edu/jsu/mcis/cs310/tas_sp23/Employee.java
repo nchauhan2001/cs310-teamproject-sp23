@@ -29,6 +29,42 @@ public class Employee {
         
     }
     
+    public int getId() {
+        return id;
+    }
+    
+    public String getFirstName() {
+        return firstName;
+    }
+    
+    public String getMiddleName() {
+        return middleName;
+    }
+    
+    public String getLastName() {
+        return lastName;
+    }
+    
+    public LocalDateTime getActive() {
+        return active;
+    }
+    
+    public Badge getBadge() {
+        return badge;
+    }
+    
+    public Department getDepartment() {
+        return department;
+    }
+    
+    public Shift getShift() {
+        return shift;
+    }
+    
+    public EmployeeType getEmployeeType() {
+        return employeeType;
+    }
+    
     @Override
     public String toString() {
         
