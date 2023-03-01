@@ -85,9 +85,13 @@ public class EmployeeFindTest {
     public void testFindEmployee5() {
         
         EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
+        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
         
-        Employee e5 = EmployeeDAO.find(115);
+        Badge b = badgeDAO.find("DFD9BB5C");
+        Employee e5 = employeeDAO.find(b);
         
-        assertEquals("ID #115: Insert other DB info here",e5.toString());
+        
+        
+        assertEquals("ID #116: Gallegos, Phillip M (#DFD9BB5C), Type: Temporary / Part Time, Department: Hafting, Active: 09/18/2015",e5.toString());
     }
 }
