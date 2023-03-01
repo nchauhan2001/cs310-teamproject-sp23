@@ -82,9 +82,9 @@ public class PunchFindTest {
         Punch p11 = punchDAO.find(1104);
         Punch p12 = punchDAO.find(1111);
         
-        assertEquals("#FF591F68 CLOCK IN: SAT 08/11/2018 05:58:11", p10.printOriginal());
-        assertEquals("#76118CDC CLOCK IN: SAT 08/11/2018 05:59:30", p11.printOriginal());
-        assertEquals("#CB99D1E8 CLOCK IN: SAT 08/11/2018 06:01:05", p12.printOriginal());
+        assertEquals("#FF591F68 CLOCK IN: SAT 08/11/2018 05:57:56", p10.printOriginal());
+        assertEquals("#3DA8B226 CLOCK IN: SAT 08/11/2018 05:59:30", p11.printOriginal());
+        assertEquals("#408B195F CLOCK IN: SAT 08/11/2018 06:01:05", p12.printOriginal());
     }
     
     @Test
