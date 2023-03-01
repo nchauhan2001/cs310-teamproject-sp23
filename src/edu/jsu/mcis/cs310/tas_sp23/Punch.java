@@ -56,7 +56,7 @@ public class Punch {
         return badge;
     }
 
-    public EventType getEventType() {
+    public EventType getPunchType() {
         return eventType;
     }
 
