@@ -13,8 +13,6 @@ public class Employee {
     private Shift shift;
     private EmployeeType employeeType;
     
-    
-    
     public Employee(int id, String firstName, String middleName, String lastName, LocalDateTime actice, Badge badge, Department department, Shift shift, EmployeeType employeeType) {
         
         this.id = id;
@@ -71,7 +69,7 @@ public class Employee {
         // Formats the date in the correct format
         // MM: month-of-year / dd: day-of-month / yyyy: year-of-era
         // Docs: https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html
-        final String date = DateTimeFormatter.ofPattern("MM/dd/yyyy").format(active).toUpperCase();
+        final String date = DateTimeFormatter.ofPattern("MM/dd/yyyy").format(active);
 
         StringBuilder s = new StringBuilder();
 
