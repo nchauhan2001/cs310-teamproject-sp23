@@ -12,7 +12,6 @@ public class Shift {
     private Duration lunchduration, shiftduration;
 
     public Shift(HashMap map) {
-        // N.B. I will double-check this HashMap later to ensure that it is fininished (for now, anyways). - William H.
         this.startTime = LocalTime.parse((String) map.get("startTime"));
         this.stopTime = LocalTime.parse((String) map.get("stopTime"));
         this.lunchStart = LocalTime.parse((String) map.get("lunchStart"));
