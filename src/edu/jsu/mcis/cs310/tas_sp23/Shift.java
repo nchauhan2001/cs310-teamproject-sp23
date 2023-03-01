@@ -45,4 +45,18 @@ public class Shift {
     public Duration getShiftDuration() {
         return shiftduration;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append(desc).append(": ");
+        s.append(startTime).append(" - ");
+        s.append(stopTime).append(" (");
+        s.append(shiftduration.toMinutes()).append(" minutes); Lunch: ");
+        s.append(lunchStart).append(" - ");
+        s.append(lunchStop).append(" (");
+        s.append(lunchduration.toMinutes()).append(" minutes)");
+
+        return s.toString();
+    }
 }

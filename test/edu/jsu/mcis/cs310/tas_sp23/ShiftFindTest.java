@@ -79,7 +79,7 @@ public class ShiftFindTest {
         Shift s2 = shiftDAO.find(d2);
         Shift s3 = shiftDAO.find(d3);
         
-        //Compare to expcted equals
+        //Compare to expected equals
         
         assertEquals("Shift 1: 07:00 - 15:30 (510 minutes); Lunch: 12:00 - 12:30 (30 minutes)", s1.toString());
         assertEquals("Shift 2: 12:00 - 20:30 (510 minutes); Lunch: 16:30 - 17:00 (30 minutes)", s2.toString());
