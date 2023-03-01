@@ -13,7 +13,7 @@ public class Employee {
     private Shift shift;
     private EmployeeType employeeType;
     
-    public Employee(int id, String firstName, String middleName, String lastName, LocalDateTime actice, Badge badge, Department department, Shift shift, EmployeeType employeeType) {
+    public Employee(int id, String firstName, String middleName, String lastName, LocalDateTime active, Badge badge, Department department, Shift shift, EmployeeType employeeType) {
         
         this.id = id;
         this.firstName = firstName;
