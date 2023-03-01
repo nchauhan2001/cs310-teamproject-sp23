@@ -84,5 +84,9 @@ public class PunchDAO {
 
         return punch;
     }
+    
+    public int create(Punch punch) {
+        return 0;
+    }
 
 }
