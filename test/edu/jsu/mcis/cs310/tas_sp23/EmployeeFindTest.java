@@ -92,6 +92,6 @@ public class EmployeeFindTest {
         
         
         
-        assertEquals("ID #116: Gallegos, Phillip M (#DFD9BB5C), Type: Temporary / Part Time, Department: Hafting, Active: 09/18/2015",e5.toString());
+        assertEquals("ID #116: Gallegos, Phillip M (#DFD9BB5C), Type: Temporary / Part-Time, Department: Hafting, Active: 09/18/2015",e5.toString());
     }
 }
