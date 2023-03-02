@@ -1,6 +1,7 @@
 package edu.jsu.mcis.cs310.tas_sp23.dao;
 
 import edu.jsu.mcis.cs310.tas_sp23.Badge;
+import edu.jsu.mcis.cs310.tas_sp23.Employee;
 import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import java.sql.*;
@@ -86,6 +87,20 @@ public class PunchDAO {
     }
     
     public int create(Punch punch) {
+        // WIP
+        
+        EmployeeDAO employeeDAO = daoFactory.getEmployeeDAO();
+
+        Employee employee = employeeDAO.find(punch.getBadge());
+        
+        // Authorize the new punch, check to make sure that the terminal ID
+        // that the punch originated from matches the ID of the designated clock terminal of the employee's department.
+        // If it does not match, return 0
+        if(punch.getTerminalId() != employee.getDepartment().getTerminalId()) {
+            return 0;
+        }
+        
+        
         return 0;
     }
 
