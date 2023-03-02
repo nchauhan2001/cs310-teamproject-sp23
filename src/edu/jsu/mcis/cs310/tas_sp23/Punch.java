@@ -8,10 +8,9 @@ package edu.jsu.mcis.cs310.tas_sp23;
  * The adjustmentType is the type of punch adjustment that was made.
  */
 
-import static edu.jsu.mcis.cs310.tas_sp23.EventType.CLOCK_IN;
-import static edu.jsu.mcis.cs310.tas_sp23.EventType.CLOCK_OUT;
-import static edu.jsu.mcis.cs310.tas_sp23.EventType.TIME_OUT;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
 public class Punch {
@@ -85,6 +84,38 @@ public class Punch {
     public void setAdjustmentType(PunchAdjustmentType adjustmentType) {
         this.adjustmentType = adjustmentType;
     }
+    
+        
+    public void adjust(Shift s){
+
+        
+        int shiftSec = s.getStartTime().toSecondOfDay();
+        System.out.println(shiftSec);
+        int timeSec = originalTimestamp.toLocalTime().toSecondOfDay();
+        int timeDistance = shiftSec - timeSec;
+        
+        if (timeDistance == 0){
+            adjustedTimestamp = s.getStartTime();
+            adjustmentType = adjustmentType = PunchAdjustmentType.values()[0];
+        }
+        else if (s.getDescription().equals("Shift 1") && adjustedTimestamp == s.getStartTime()){
+            adjustmentType = PunchAdjustmentType.values()[1];
+        }
+        else{
+            
+            int newTime = 0;
+            if (timeDistance > s.getGracePeriod()){
+                timeSec += timeDistance;
+            }
+            adjustedTimestamp = LocalTime.ofSecondOfDay(timeSec);
+            adjustmentType = PunchAdjustmentType.values()[1];
+        }
+        System.out.println(timeSec);
+
+        System.out.println(s);
+        
+        
+    }
 
     // prints the original punch details to console
     public String printOriginal() {
@@ -103,6 +134,20 @@ public class Punch {
         
         return s.toString(); 
         
+    }
+    
+    public String printAdjusted(){
+        final String date = DateTimeFormatter.ofPattern("E MM/dd/yyyy").format(originalTimestamp).toUpperCase();
+        String adjustedTime = DateTimeFormatter.ofPattern("HH:mm:ss").format(adjustedTimestamp);
+        StringBuilder s = new StringBuilder();
+        
+        s.append('#').append(badge.getId()).append(' ');
+        s.append(eventType.toString()).append(": ");
+        s.append(date).append(" ");
+        s.append(adjustedTime).append(" (");
+        s.append(adjustmentType).append(")");
+        
+        return s.toString();
     }
 
     // overrides toString() method to print original punch details
