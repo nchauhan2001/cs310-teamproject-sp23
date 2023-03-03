@@ -88,10 +88,10 @@ public class Punch {
         
     public void adjust(Shift s){
         String dayOfWeek = originalTimestamp.getDayOfWeek().toString();
-        System.out.println(dayOfWeek);
-        System.out.println(printOriginal());
-        System.out.println(s);
-        
+//        System.out.println(dayOfWeek);
+//        System.out.println(printOriginal());
+//        System.out.println(s);
+        boolean isWeekend = false;
         int startSec = s.getStartTime().toSecondOfDay();
         int LStartSec = s.getLunchStart().toSecondOfDay();
         int LStopSec = s.getLunchStop().toSecondOfDay();
@@ -99,82 +99,131 @@ public class Punch {
         int dockSec = s.getDockPenalty() * 60;
         int graceSec = s.getGracePeriod() * 60;
         int intervalSec = s.getRoundInterval() * 60;
-
         int timeSec = originalTimestamp.toLocalTime().toSecondOfDay();
+        
         int timeDifference;
         int adjTime = 0;
         
-        if (eventType.equals(EventType.CLOCK_IN)){
-            // clock in before start time
-            if (startSec > timeSec){
-                timeDifference = startSec - timeSec;
-                adjTime = timeSec + timeDifference;
-                adjustmentType = PunchAdjustmentType.SHIFT_START;
-            }
-            // clock in after start time
-            else if (startSec < timeSec && timeSec < LStartSec){
-                timeDifference = timeSec - startSec;
-                adjTime = timeSec - timeDifference;
-                adjustmentType = PunchAdjustmentType.SHIFT_START;
-                
-                // clock in after grace period
-                if (timeDifference > (graceSec)){
-                    adjTime = timeSec + (dockSec - timeDifference);
-                    adjustmentType = PunchAdjustmentType.SHIFT_DOCK;
-                }
-            }
-            // clock in for lunch
-            else if (LStopSec > timeSec){
-                timeDifference = LStopSec - timeSec;
-                adjTime = timeSec + timeDifference;
-                adjustmentType = PunchAdjustmentType.LUNCH_STOP;
-            }
+        if (dayOfWeek.equals("SATURDAY") || dayOfWeek.equals("SUNDAY")){
+            isWeekend = true;
+            System.out.println(dayOfWeek);
+            System.out.println(printOriginal());
+            System.out.println(s);
         }
-        /*CLOCK OUT*/
-        else if (eventType.equals(EventType.CLOCK_OUT)){
-            // clock out for lunch
-            if (LStartSec < timeSec && timeSec < LStopSec){
-                timeDifference =  timeSec - LStartSec;
-                adjTime = timeSec - timeDifference;
-                adjustmentType = PunchAdjustmentType.LUNCH_START;
-            }
-            // clock out before shift stop
-            else if (stopSec < timeSec){
-                timeDifference = timeSec - stopSec;
-                adjTime = timeSec - timeDifference;
-                adjustmentType = PunchAdjustmentType.SHIFT_STOP;
+        
+        if (eventType.equals(EventType.CLOCK_IN)){
+            
+            if (isWeekend){
                 
-                if ((timeSec % intervalSec) < 60){
-                    adjTime = timeSec - (timeSec % intervalSec);
-                    adjustmentType = PunchAdjustmentType.NONE;
-                }
-            }
-            // clock out after shift stop
-            else if (stopSec > timeSec){
-                timeDifference = stopSec - timeSec;
+                int intervalTimeDifference = timeSec % intervalSec;
                 
-                
-                // clock out before grace period
-                if (timeDifference > (graceSec) && timeDifference < dockSec){
-                    adjTime = timeSec - dockSec - timeDifference;
-                    adjustmentType = PunchAdjustmentType.SHIFT_DOCK;
-                }
-                else if (timeDifference > graceSec && timeDifference > dockSec){
-                    if ((timeSec % intervalSec) < 60){
-                    adjTime = timeSec - (timeSec % intervalSec);
-                    adjustmentType = PunchAdjustmentType.NONE;
-                    }
-                    else{
-                    adjTime = timeSec - (intervalSec - timeDifference);
-                    adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
-                    }
+                if (intervalTimeDifference > intervalSec/2){
+                    timeDifference = intervalSec - intervalTimeDifference;
+                    adjTime = timeSec + timeDifference;
                 }
                 else{
+                    adjTime = timeSec - intervalTimeDifference;
+                }
+
+                adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
+                
+                
+            }
+            else{
+                // clock in before start time
+                if (startSec > timeSec){
+                    timeDifference = startSec - timeSec;
                     adjTime = timeSec + timeDifference;
-                adjustmentType = PunchAdjustmentType.SHIFT_STOP;
+                    adjustmentType = PunchAdjustmentType.SHIFT_START;
+                }
+                // clock in after start time
+                else if (startSec < timeSec && timeSec < LStartSec){
+                    timeDifference = timeSec - startSec;
+                    adjTime = timeSec - timeDifference;
+                    adjustmentType = PunchAdjustmentType.SHIFT_START;
+
+                    // clock in after grace period
+                    if (timeDifference > (graceSec)){
+                        adjTime = timeSec + (dockSec - timeDifference);
+                        adjustmentType = PunchAdjustmentType.SHIFT_DOCK;
+                    }
+                }
+                // clock in for lunch
+                else if (LStopSec > timeSec){
+                    timeDifference = LStopSec - timeSec;
+                    adjTime = timeSec + timeDifference;
+                    adjustmentType = PunchAdjustmentType.LUNCH_STOP;
                 }
             }
             
+        }
+        
+        /*CLOCK OUT*/
+        if (eventType.equals(EventType.CLOCK_OUT)){
+            if (isWeekend){
+                                
+                int intervalTimeDifference = timeSec % intervalSec;
+                
+                if (intervalTimeDifference > intervalSec/2){
+                    timeDifference = intervalSec - intervalTimeDifference;
+                    adjTime = timeSec + timeDifference;
+                }
+                else{
+                    adjTime = timeSec - intervalTimeDifference;
+                }
+
+                adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
+            }
+            else{
+                // clock out for lunch
+                if (LStartSec < timeSec && timeSec < LStopSec){
+                    timeDifference =  timeSec - LStartSec;
+                    adjTime = timeSec - timeDifference;
+                    adjustmentType = PunchAdjustmentType.LUNCH_START;
+                }
+                // clock out before shift stop
+                else if (stopSec < timeSec){
+                    timeDifference = timeSec - stopSec;
+                    adjTime = timeSec - timeDifference;
+                    adjustmentType = PunchAdjustmentType.SHIFT_STOP;
+
+                    if ((timeSec % intervalSec) < 60){
+                        adjTime = timeSec - (timeSec % intervalSec);
+                        adjustmentType = PunchAdjustmentType.NONE;
+                    }
+                }
+                // clock out after shift stop
+                else if (stopSec > timeSec){
+                    
+                    timeDifference = stopSec - timeSec;
+
+                    // clock out before grace period
+                    if (timeDifference > (graceSec) && timeDifference <= dockSec){
+                        if (timeDifference < dockSec){
+                            adjTime = timeSec - dockSec - timeDifference;    
+                        }
+                        else{
+                            adjTime = timeSec;
+                        }
+                        
+                        adjustmentType = PunchAdjustmentType.SHIFT_DOCK;
+                    }
+                    else if (timeDifference > graceSec && timeDifference > dockSec){
+                        if ((timeSec % intervalSec) < 60){
+                        adjTime = timeSec - (timeSec % intervalSec);
+                        adjustmentType = PunchAdjustmentType.NONE;
+                        }
+                        else{
+                        adjTime = timeSec - (intervalSec - timeDifference);
+                        adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
+                        }
+                    }
+                    else{
+                        adjTime = timeSec + timeDifference;
+                        adjustmentType = PunchAdjustmentType.SHIFT_STOP;
+                    }
+                }
+            }
         }
 
         adjustedTimestamp = LocalTime.ofSecondOfDay(adjTime);
