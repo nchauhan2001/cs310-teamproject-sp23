@@ -6,7 +6,9 @@ import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class PunchDAO {
     
@@ -154,5 +156,62 @@ public class PunchDAO {
         
         return key;
     }
+    
+    public ArrayList<Punch> list(Badge badge, LocalDate date) {
+    ArrayList<Punch> punches = new ArrayList<>();
+
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    try {
+        Connection conn = daoFactory.getConnection();
+
+        if (conn.isValid(0)) {
+            ps = conn.prepareStatement("SELECT * FROM event WHERE badgeid = ? AND DATE(timestamp) = ?");
+            ps.setString(1, badge.getId());
+            ps.setString(2, date.toString());
+
+            boolean hasResults = ps.execute();
+
+            if (hasResults) {
+                rs = ps.getResultSet();
+
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    int terminalId = rs.getInt("terminalid");
+                    BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+                    Badge punchBadge = badgeDAO.find(rs.getString("badgeid"));
+                    LocalDateTime timestamp = rs.getTimestamp("timestamp").toLocalDateTime();
+                    int eventTypeId = rs.getInt("eventtypeid");
+                    EventType punchType = EventType.values()[eventTypeId];
+
+                    punches.add(new Punch(id, terminalId, punchBadge, timestamp, punchType));
+                }
+            }
+        }
+
+    } catch (SQLException e) {
+        throw new DAOException(e.getMessage());
+    } finally {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                throw new DAOException(e.getMessage());
+            }
+        }
+        if (ps != null) {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                throw new DAOException(e.getMessage());
+            }
+        }
+    }
+
+
+    return punches;
+}
+
 
 }
