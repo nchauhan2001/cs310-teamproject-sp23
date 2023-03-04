@@ -20,7 +20,7 @@ public class Punch {
     private final Badge badge;
     private final EventType eventType;
     private final LocalDateTime originalTimestamp;
-    private final String id;
+    private int id;
     private LocalDateTime adjustedTimestamp;
     private PunchAdjustmentType adjustmentType;
 
@@ -30,7 +30,6 @@ public class Punch {
         this.badge = badge;
         this.eventType = eventType;
         this.originalTimestamp = LocalDateTime.now();
-        this.id = null;
         this.adjustedTimestamp = null;
         this.adjustmentType = null;
     }
@@ -41,7 +40,7 @@ public class Punch {
         this.badge = badge;
         this.eventType = eventType;
         this.originalTimestamp = origTimestamp;
-        this.id = String.valueOf(id);
+        this.id = id;
         this.adjustedTimestamp = null;
         this.adjustmentType = null;
     }
@@ -63,7 +62,7 @@ public class Punch {
         return originalTimestamp;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
