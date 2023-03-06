@@ -10,7 +10,6 @@ package edu.jsu.mcis.cs310.tas_sp23;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
 public class Punch {
@@ -23,6 +22,7 @@ public class Punch {
     private int id;
     private LocalDateTime adjustedTimestamp;
     private PunchAdjustmentType adjustmentType;
+    final String dateFormat = "E MM/dd/yyyy HH:mm:ss";
 
     // constructor
     public Punch(int terminalId, Badge badge, EventType eventType) {
@@ -70,25 +70,13 @@ public class Punch {
         return adjustedTimestamp;
     }
 
-    // setter for adjustedTimestamp
-    public void setAdjustedTimestamp(LocalDateTime adjustedTimestamp) {
-        this.adjustedTimestamp = adjustedTimestamp;
-    }
-
     public PunchAdjustmentType getAdjustmentType() {
         return adjustmentType;
     }
-
-    // setter for adjustmentType
-    public void setAdjustmentType(PunchAdjustmentType adjustmentType) {
-        this.adjustmentType = adjustmentType;
-    }
-    
         
     public void adjust(Shift s){
         String dayOfWeek = originalTimestamp.getDayOfWeek().toString();
         
-        boolean isWeekend = false;
         int startSec = s.getStartTime().toSecondOfDay();
         int LStartSec = s.getLunchStart().toSecondOfDay();
         int LStopSec = s.getLunchStop().toSecondOfDay();
@@ -98,128 +86,78 @@ public class Punch {
         int intervalSec = s.getRoundInterval() * 60;
         int timeSec = originalTimestamp.toLocalTime().toSecondOfDay();
         
-        int timeDifference;
-        int adjTimeSec = 0;
-
+        int intervalTimeDifference = timeSec % intervalSec;
+        int timeDifference = intervalSec - intervalTimeDifference;
+        int adjTimeSec;
+        
+        if (intervalTimeDifference > intervalSec/2){
+            adjTimeSec = timeSec + timeDifference;
+        }
+        else{
+            adjTimeSec = timeSec - intervalTimeDifference;
+        }
+        
         if (dayOfWeek.equals("SATURDAY") || dayOfWeek.equals("SUNDAY")){
-            isWeekend = true;
+            adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
         }
         /* CLOCK IN */
-        if (eventType.equals(EventType.CLOCK_IN)){
-            
-            if (isWeekend){
-                int intervalTimeDifference = timeSec % intervalSec;
-                
-                if (intervalTimeDifference > intervalSec/2){
-                    timeDifference = intervalSec - intervalTimeDifference;
-                    adjTimeSec = timeSec + timeDifference;
+        else if (eventType.equals(EventType.CLOCK_IN)){
+
+            if (timeSec < startSec){
+                // even if time is closer to interval increment before shift start
+                // don't adjust backwards, only forwards for shift start
+                adjTimeSec = timeSec + timeDifference;
+                adjustmentType = PunchAdjustmentType.SHIFT_START;
+            }
+            else if (timeSec < LStartSec) {
+                if (intervalTimeDifference > graceSec){
+                    adjustmentType = PunchAdjustmentType.SHIFT_DOCK;
                 }
                 else{
-                    adjTimeSec = timeSec - intervalTimeDifference;
-                }
-                adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
-            }
-            else{
-                timeDifference = timeSec % intervalSec;
-                
-                if (startSec > timeSec){
-                    timeDifference = intervalSec - timeDifference;
-                    adjTimeSec = timeSec + timeDifference;
                     adjustmentType = PunchAdjustmentType.SHIFT_START;
                 }
-                else if (startSec < timeSec && timeSec < LStartSec) {
-                    if (timeDifference > graceSec){
-                        adjTimeSec = timeSec + (dockSec - timeDifference);
-                        adjustmentType = PunchAdjustmentType.SHIFT_DOCK;
-                    }
-                    else{
-                        adjTimeSec = timeSec - timeDifference;
-                        adjustmentType = PunchAdjustmentType.SHIFT_START;
-                    }
-                }
-                else{
-                    if (timeSec < LStopSec){
-                        adjTimeSec = timeSec + (intervalSec - timeDifference);
-                    }
-                    else{
-                        adjTimeSec = timeSec - timeDifference;
-                    }
-                    
-                    adjustmentType = PunchAdjustmentType.LUNCH_STOP;
-                }
-                
+            }
+            else{
+                adjustmentType = PunchAdjustmentType.LUNCH_STOP;
             }
         }
         /*CLOCK OUT*/
-        if (eventType.equals(EventType.CLOCK_OUT)){
+        else if (eventType.equals(EventType.CLOCK_OUT)){
             
-            if (isWeekend){ 
-                int intervalTimeDifference = timeSec % intervalSec;
-                
-                if (intervalTimeDifference > intervalSec/2){
-                    timeDifference = intervalSec - intervalTimeDifference;
-                    adjTimeSec = timeSec + timeDifference;
+            if (timeSec < stopSec && timeSec > LStopSec){
+                if (timeDifference < graceSec){
+                    adjustmentType = PunchAdjustmentType.SHIFT_STOP;
+                }
+                else if (timeDifference > graceSec && (stopSec - timeSec) <= dockSec){
+                    adjustmentType = PunchAdjustmentType.SHIFT_DOCK;
                 }
                 else{
-                    adjTimeSec = timeSec - intervalTimeDifference;
+                    adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
                 }
-                adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
             }
-            else{
-                timeDifference = timeSec % intervalSec;
-                
-                if (stopSec > timeSec && timeSec > LStopSec){
-                    timeDifference = stopSec - timeSec;
-                    
-                    if (timeDifference > graceSec && timeDifference <= dockSec){
-                        if (timeDifference < dockSec){
-                            adjTimeSec = timeSec - dockSec - timeDifference;
-                        }
-                        else{
-                            adjTimeSec = timeSec;
-                        }
-                        adjustmentType = PunchAdjustmentType.SHIFT_DOCK;
-                    }
-                    else if (timeDifference > graceSec && timeDifference > dockSec){
-                        adjTimeSec = timeSec - (intervalSec - timeDifference);
-                        adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
-                    }
-                    else{
-                        adjTimeSec = timeSec + timeDifference;
-                        adjustmentType = PunchAdjustmentType.SHIFT_STOP;
-                    }
-                }
-                else if (stopSec < timeSec) {
-                    adjTimeSec = timeSec - timeDifference;
-                    if (timeDifference < 60){
-                        adjustmentType = PunchAdjustmentType.NONE;
-                    }
-                    else{
-                        adjustmentType = PunchAdjustmentType.SHIFT_STOP;
-                    }
+            else if (timeSec > stopSec) {
+                if (intervalTimeDifference < 60){
+                    adjustmentType = PunchAdjustmentType.NONE;
                 }
                 else{
-                    if (timeSec < LStartSec){
-                        adjTimeSec = timeSec + timeDifference;
-                    }
-                    else{
-                        adjTimeSec = timeSec - timeDifference;
-                    }
-                    adjustmentType = PunchAdjustmentType.LUNCH_START;
+                    adjustmentType = PunchAdjustmentType.SHIFT_STOP;
                 }
+            }
+            else {
+                adjustmentType = PunchAdjustmentType.LUNCH_START;
             }
         }
+        
         adjustedTimestamp = LocalTime.ofSecondOfDay(adjTimeSec).atDate(originalTimestamp.toLocalDate());
     }
-
+    
     // prints the original punch details to console
     public String printOriginal() {
-
         // Formats the date in the correct format
         // E: day-of-week MM: month-of-year / dd: day-of-month / yyyy: year-of-era
         // HH: hour-of-day (0-23) | mm: minute-of-hour | ss: second-of-minute
         // Docs: https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html
-        final String date = DateTimeFormatter.ofPattern("E MM/dd/yyyy HH:mm:ss").format(originalTimestamp).toUpperCase();
+        final String date = DateTimeFormatter.ofPattern(dateFormat).format(originalTimestamp).toUpperCase();
         
         StringBuilder s = new StringBuilder();
         
@@ -227,19 +165,17 @@ public class Punch {
         s.append(eventType.toString()).append(": ");
         s.append(date);
         
-        return s.toString(); 
-        
+        return s.toString();
     }
     
+    // prints adjusted punch information
     public String printAdjusted(){
-        final String date = DateTimeFormatter.ofPattern("E MM/dd/yyyy").format(originalTimestamp).toUpperCase();
-        String adjustedTime = DateTimeFormatter.ofPattern("HH:mm:ss").format(adjustedTimestamp);
+        final String date = DateTimeFormatter.ofPattern(dateFormat).format(adjustedTimestamp).toUpperCase();
         StringBuilder s = new StringBuilder();
         
         s.append('#').append(badge.getId()).append(' ');
         s.append(eventType.toString()).append(": ");
-        s.append(date).append(" ");
-        s.append(adjustedTime).append(" (");
+        s.append(date).append(" (");
         s.append(adjustmentType).append(")");
         
         return s.toString();
