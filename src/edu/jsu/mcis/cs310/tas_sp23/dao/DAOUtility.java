@@ -6,6 +6,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
 import com.github.cliftonlabs.json_simple.*;
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
+import edu.jsu.mcis.cs310.tas_sp23.Shift;
 
 /**
  * 
@@ -46,4 +47,11 @@ public final class DAOUtility {
         }
         return Jsoner.serialize(jsonData);
     }
+    
+    public static int calculateTotalMinutes(ArrayList<Punch> dailypunchlist, Shift shift) {
+        int total = 0;
+        
+        return total;
+    }
+    
 }
