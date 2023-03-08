@@ -51,5 +51,9 @@ public final class DAOFactory {
     public DepartmentDAO getDepartmentDAO() {
         return new DepartmentDAO(this);
     }
+    
+    public AbsenteeismDAO getAbsenteeismDAO() {
+        return new AbsenteeismDAO(this);
+    }
 
 }
