@@ -63,7 +63,7 @@ public class PunchCreateTest {
     }
     
     @Test
-    public void testCreateTest2(){
+    public void testCreatePunch2(){
         
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         
@@ -100,5 +100,10 @@ public class PunchCreateTest {
         assertEquals(terminalid, p4.getTerminalId());
         assertEquals(punchtype, p4.getPunchType());
         assertEquals(ots.format(dtf), rts.format(dtf));
+    }
+    
+    @Test
+    public void testCreatePunch3(){
+        
     }
 }
