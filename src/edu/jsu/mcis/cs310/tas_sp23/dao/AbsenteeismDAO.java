@@ -77,4 +77,8 @@ public class AbsenteeismDAO {
 
     }
     
+    public int create(Absenteeism absenteeism) {
+        return 0;
+    }
+    
 }
