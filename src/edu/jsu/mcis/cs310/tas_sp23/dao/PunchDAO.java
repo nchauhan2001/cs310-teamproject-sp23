@@ -187,12 +187,12 @@ public class PunchDAO {
                         LocalDateTime timestamp = rs.getTimestamp("timestamp").toLocalDateTime();
                         EventType eventType = EventType.values()[rs.getInt("eventtypeid")];
 
-        // Declare the Badge variable before passing it to Punch constructor
+                        // Declare the Badge variable before passing it to Punch constructor
                         Punch punch = new Punch(id, terminalId, punchBadge, timestamp, eventType);
                         punches.add(punch);
                     }
 
-        // Check for the first punch of the next day and add it to the list if it is a "clock in"
+                    // Check for the first punch of the next day and add it to the list if it is a "clock in"
                     if (punches.size() > 0) {
                         Punch firstPunch = punches.get(0);
                         LocalDateTime nextDayStart = LocalDateTime.of(date.plusDays(1), LocalTime.MIDNIGHT);
@@ -204,7 +204,7 @@ public class PunchDAO {
                         }
                     }
 
-        // Check for the last punch of the day and add an "extra" punch if needed
+                    // Check for the last punch of the day and add an "extra" punch if needed
                     if (!punches.isEmpty()) {
                         Punch lastPunch = punches.get(punches.size() - 1);
                         LocalDateTime endOfDay = LocalDateTime.of(date, LocalTime.MAX);
@@ -217,7 +217,7 @@ public class PunchDAO {
                     }
                 }
             }
-        /*This code first checks if there is a punch from the following day that needs to be added to the list. 
+            /*This code first checks if there is a punch from the following day that needs to be added to the list. 
         Then, it checks if the last punch of the day is a "clock in" or "time in" punch and adds an "extra" punch 
         of the opposite type to close the last clock in/clock out or clock in/time out pair of the day. 
         Finally, it removes the last punch from the list if it is a clock in or clock out punch.*/
@@ -247,4 +247,25 @@ public class PunchDAO {
         return punches;
     }
 
+    // List method for punches from a range of dates - W.H.
+    public ArrayList<Punch> list(Badge badge, LocalDate begin, LocalDate end) {
+        ArrayList<Punch> list = new ArrayList();
+        LocalDate date = begin;
+        while (date.isBefore(end) || date.equals(end)) {
+            ArrayList<Punch> entries = new ArrayList();
+            try {
+                entries = list(badge, date);
+            } catch (IndexOutOfBoundsException e) {
+            }
+
+            if (!entries.isEmpty() && !list.isEmpty()) {
+                if (list.get(list.size() - 1).toString().equals(entries.get(0).toString())) {
+                    list.remove(list.size() - 1);
+                }
+            }
+            list.addAll(entries);
+            date = date.plusDays(1);
+        }
+        return list;
+    }
 }
