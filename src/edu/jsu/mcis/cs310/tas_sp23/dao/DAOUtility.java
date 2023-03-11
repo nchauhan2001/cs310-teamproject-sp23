@@ -111,4 +111,7 @@ public final class DAOUtility {
         return total;
     }
     
+    public static String getPunchListPlusTotalsAsJSON(ArrayList<Punch> punchlist, Shift shift) {
+
+    }
 }
