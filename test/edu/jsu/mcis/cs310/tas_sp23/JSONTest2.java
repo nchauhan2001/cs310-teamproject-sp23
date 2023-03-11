@@ -44,7 +44,7 @@ public class JSONTest2 {
 
             /* Get Pay Period Punch List */
 
-            LocalDate ts = p.getOriginaltimestamp().toLocalDate();
+            LocalDate ts = p.getOriginalTimestamp().toLocalDate();
             LocalDate begin = ts.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
             LocalDate end = begin.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
 
@@ -96,7 +96,7 @@ public class JSONTest2 {
 
             /* Get Pay Period Punch List */
 
-            LocalDate ts = p.getOriginaltimestamp().toLocalDate();
+            LocalDate ts = p.getOriginalTimestamp().toLocalDate();
             LocalDate begin = ts.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
             LocalDate end = begin.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
 
@@ -148,7 +148,7 @@ public class JSONTest2 {
 
             /* Get Pay Period Punch List */
 
-            LocalDate ts = p.getOriginaltimestamp().toLocalDate();
+            LocalDate ts = p.getOriginalTimestamp().toLocalDate();
             LocalDate begin = ts.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
             LocalDate end = begin.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
 
