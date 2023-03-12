@@ -7,6 +7,8 @@ import com.github.cliftonlabs.json_simple.*;
 import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
 import edu.jsu.mcis.cs310.tas_sp23.Shift;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * 
@@ -161,9 +163,24 @@ public final class DAOUtility {
         result.put("punchlist", jsonData.toString());
         
         result.put("totalminutes", Integer.toString(calculateTotalMinutes(sortedArray, shift)));
-        result.put("absenteeism", Integer.toString(calculateAbsenteeism(sortedArray, shift)));
+        result.put("absenteeism", calculateAbsenteeism(sortedArray, shift).toString());
         
         return Jsoner.serialize(result);
         
+    }
+    
+    public static BigDecimal calculateAbsenteeism(ArrayList<Punch> punchlist, Shift s){
+        
+        double scheduledMinutes = 2400;
+        BigDecimal percentage;
+        
+        int totalMinutes = calculateTotalMinutes(punchlist, s);
+        double percent = (scheduledMinutes - totalMinutes) / scheduledMinutes * 100;
+        
+        percentage = new BigDecimal(percent);
+        
+        percentage = percentage.setScale(2, RoundingMode.HALF_UP);
+        
+        return percentage;
     }
 }
