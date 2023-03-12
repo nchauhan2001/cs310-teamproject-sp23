@@ -15,6 +15,7 @@ public class PunchDAO {
 
     private static final String QUERY_FIND = "SELECT * FROM event where id = ?";
     private static final String QUERY_CREATE = "INSERT INTO event (terminalid, badgeid, timestamp, eventtypeid) VALUES (?, ?, ?, ?)";
+    private static final String QUERY_LIST = "SELECT * FROM event WHERE badgeid = ? AND DATE(timestamp) = ? ORDER BY timestamp";
 
     private final DAOFactory daoFactory;
 
@@ -170,9 +171,9 @@ public class PunchDAO {
             Connection conn = daoFactory.getConnection();
 
             if (conn.isValid(0)) {
-                ps = conn.prepareStatement("SELECT * FROM event WHERE badgeid = ? AND DATE(timestamp) = ?");
+                ps = conn.prepareStatement(QUERY_LIST);
                 ps.setString(1, badge.getId());
-                ps.setString(2, date.toString());
+                ps.setDate(2, Date.valueOf(date));
 
                 boolean hasResults = ps.execute();
 
@@ -191,36 +192,34 @@ public class PunchDAO {
                         Punch punch = new Punch(id, terminalId, punchBadge, timestamp, eventType);
                         punches.add(punch);
                     }
+                }
+                
+                // Check for the last punch of the day and add an "extra" punch if needed
+                Punch lastPunch = punches.get(punches.size() - 1);
 
-                    // Check for the first punch of the next day and add it to the list if it is a "clock in"
-                    if (punches.size() > 0) {
-                        Punch firstPunch = punches.get(0);
-                        LocalDateTime nextDayStart = LocalDateTime.of(date.plusDays(1), LocalTime.MIDNIGHT);
+                if (lastPunch.getPunchType() == EventType.CLOCK_IN){
+                    LocalDate nextFirstPunch = lastPunch.getOriginalTimestamp().toLocalDate().plusDays(1);
 
-                        if (firstPunch.getOriginalTimestamp().isBefore(nextDayStart)) {
-                            EventType nextDayEventType = firstPunch.getPunchType().equals(EventType.CLOCK_IN) ? EventType.CLOCK_OUT : EventType.CLOCK_IN;
-                            Punch nextDayPunch = new Punch(0, firstPunch.getTerminalId(), firstPunch.getBadge(), nextDayStart, nextDayEventType);
-                            punches.add(nextDayPunch);
-                        }
-                    }
+                    ps = conn.prepareStatement(QUERY_LIST);
 
-                    // Check for the last punch of the day and add an "extra" punch if needed
-                    if (!punches.isEmpty()) {
-                        Punch lastPunch = punches.get(punches.size() - 1);
-                        LocalDateTime endOfDay = LocalDateTime.of(date, LocalTime.MAX);
+                    ps.setString(1, badge.getId());
+                    ps.setDate(2, Date.valueOf(nextFirstPunch));
+                    hasResults = ps.execute();
+                    
+                    if (hasResults){
+                        rs = ps.getResultSet();
+                        rs.next();
 
-                        if (lastPunch.getOriginalTimestamp().isBefore(endOfDay)) {
-                            EventType nextDayEventType = lastPunch.getPunchType().equals(EventType.CLOCK_IN) ? EventType.TIME_OUT : EventType.CLOCK_OUT;
-                            Punch extraPunch = new Punch(0, lastPunch.getTerminalId(), lastPunch.getBadge(), endOfDay, nextDayEventType);
-                            punches.add(extraPunch);
+                        EventType nextPunchType = EventType.values()[rs.getInt("eventtypeid")];
+
+                        if (nextPunchType == EventType.CLOCK_OUT || nextPunchType == EventType.TIME_OUT){
+                            Punch punch = find(rs.getInt("id"));
+                            
+                            punches.add(punch);
                         }
                     }
                 }
             }
-            /*This code first checks if there is a punch from the following day that needs to be added to the list. 
-        Then, it checks if the last punch of the day is a "clock in" or "time in" punch and adds an "extra" punch 
-        of the opposite type to close the last clock in/clock out or clock in/time out pair of the day. 
-        Finally, it removes the last punch from the list if it is a clock in or clock out punch.*/
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         } finally {
@@ -238,11 +237,6 @@ public class PunchDAO {
                     throw new DAOException(e.getMessage());
                 }
             }
-        }
-        // Remove the last clock in/ out punch from the list (as leaving it causes the tests to fail).
-        if (punches.size() > 0 && (punches.get(punches.size() - 1).getPunchType() == EventType.CLOCK_IN
-                || punches.get(punches.size() - 1).getPunchType() == EventType.CLOCK_OUT)) {
-            punches.remove(punches.size() - 1);
         }
         return punches;
     }
