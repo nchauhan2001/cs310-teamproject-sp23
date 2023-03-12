@@ -79,107 +79,84 @@ public class Punch {
     public void adjust(Shift s){
         String dayOfWeek = originalTimestamp.getDayOfWeek().toString();
         
-        LocalTime originalLocalTime = originalTimestamp.toLocalTime();
-        Duration durationDifference;
-        LocalTime intervalTime = LocalTime.of(0, s.getRoundInterval());
-        LocalTime dockTime = LocalTime.of(0, s.getDockPenalty());
-        int originalTimeSec = originalLocalTime.toSecondOfDay();
-        int intervalSec = intervalTime.toSecondOfDay();
-        int differenceSec = originalTimeSec % intervalSec;
-        int intervalDifferenceSec = intervalSec - differenceSec;
-        LocalTime timeDifference = LocalTime.ofSecondOfDay(differenceSec);
-        LocalTime intervalTimeDifference = LocalTime.ofSecondOfDay(intervalDifferenceSec);
+        int startSec = s.getStartTime().toSecondOfDay();
+        int LStartSec = s.getLunchStart().toSecondOfDay();
+        int LStopSec = s.getLunchStop().toSecondOfDay();
+        int stopSec = s.getStopTime().toSecondOfDay();
+        int dockSec = s.getDockPenalty() * 60;
+        int graceSec = s.getGracePeriod() * 60;
+        int intervalSec = s.getRoundInterval() * 60;
+        int timeSec = originalTimestamp.toLocalTime().toSecondOfDay();
+        
+        int intervalTimeDifference = timeSec % intervalSec;
+        int timeDifference = intervalSec - intervalTimeDifference;
+        int adjTimeSec;
+        
+        if (intervalTimeDifference > intervalSec/2){
+            adjTimeSec = timeSec + timeDifference;
+        }
+        else{
+            adjTimeSec = timeSec - intervalTimeDifference;
+        }
         
         if (dayOfWeek.equals("SATURDAY") || dayOfWeek.equals("SUNDAY")){
-            
-            if (timeDifference.compareTo(LocalTime.ofSecondOfDay(intervalSec/2)) > 0){
-                durationDifference = Duration.between(timeDifference, intervalTime);
-                adjustedTimestamp = (LocalDateTime) durationDifference.addTo(originalTimestamp);
-            }
-            else{
-                durationDifference = Duration.between(intervalTimeDifference, intervalTime);
-                adjustedTimestamp = (LocalDateTime) durationDifference.subtractFrom(originalTimestamp);
-            }
             adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
         }
         /* CLOCK IN */
         else if (eventType.equals(EventType.CLOCK_IN)){
-            durationDifference = Duration.between(s.getStartTime(), originalLocalTime);
-            LocalTime dockDifference = (LocalTime)durationDifference.subtractFrom(dockTime);
-            
-            if (originalLocalTime.isAfter(s.getStartTime()) && originalLocalTime.isBefore(s.getLunchStart())){
-                if (originalLocalTime.getMinute() > s.getGracePeriod()){
-                    int dockMinutes = dockDifference.getMinute();
-                    int dockSeconds = dockDifference.getSecond();
-                    adjustedTimestamp = originalTimestamp.plusMinutes(dockMinutes).plusSeconds(dockSeconds);
+
+            if (timeSec < startSec){
+                if (startSec-timeSec < intervalSec){
+                    // even if time is closer to interval increment before shift start
+                    // don't adjust backwards, only forwards for shift start
+                    adjTimeSec = timeSec + timeDifference;
+                    adjustmentType = PunchAdjustmentType.SHIFT_START;
+                }
+                else{
+                    adjustmentType = PunchAdjustmentType.NONE;
+                }
+            }
+            else if (timeSec < LStartSec) {
+                if (intervalTimeDifference > graceSec){
                     adjustmentType = PunchAdjustmentType.SHIFT_DOCK;
                 }
                 else{
-                    durationDifference = Duration.between(s.getStartTime(), originalLocalTime);
-                    adjustedTimestamp = (LocalDateTime) durationDifference.subtractFrom(originalTimestamp);
                     adjustmentType = PunchAdjustmentType.SHIFT_START;
                 }
             }
-            else if (originalLocalTime.isBefore(s.getStartTime())){
-                durationDifference = Duration.between(originalLocalTime, s.getStartTime());
-                adjustedTimestamp = (LocalDateTime) durationDifference.addTo(originalTimestamp);
-                adjustmentType = PunchAdjustmentType.SHIFT_START;
-            }
-            else if (originalLocalTime.isBefore(s.getLunchStop()) && originalLocalTime.isAfter(s.getLunchStart())){
-                durationDifference = Duration.between(originalLocalTime, s.getLunchStop());
-                adjustedTimestamp = (LocalDateTime) durationDifference.addTo(originalTimestamp);
+            else{
                 adjustmentType = PunchAdjustmentType.LUNCH_STOP;
             }
+            
         }
         /*CLOCK OUT*/
         else if (eventType.equals(EventType.CLOCK_OUT)){
-            durationDifference = Duration.between(originalLocalTime, s.getStopTime());
-            Duration graceDuration = Duration.of(s.getGracePeriod(), ChronoUnit.MINUTES);
-            Duration dockDuration = Duration.of(s.getDockPenalty(), ChronoUnit.MINUTES);
             
-            if (originalLocalTime.isAfter(s.getStopTime()) && durationDifference.compareTo(graceDuration) < 0){
-                if (differenceSec < 60){
-                    adjustedTimestamp = originalTimestamp.withSecond(0).withNano(0);
+            if (timeSec < stopSec && timeSec > LStopSec){
+                if (timeDifference < graceSec){
+                    adjustmentType = PunchAdjustmentType.SHIFT_STOP;
+                }
+                else if (timeDifference > graceSec && (stopSec - timeSec) <= dockSec){
+                    adjustmentType = PunchAdjustmentType.SHIFT_DOCK;
+                }
+                else{
+                    adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
+                }
+            }
+            else if (timeSec > stopSec) {
+                if (intervalTimeDifference < 60 && timeSec-stopSec > intervalSec){
                     adjustmentType = PunchAdjustmentType.NONE;
                 }
                 else{
-                    adjustedTimestamp = (LocalDateTime) durationDifference.addTo(originalTimestamp);
                     adjustmentType = PunchAdjustmentType.SHIFT_STOP;
                 }
             }
-            else if (originalLocalTime.isBefore(s.getStopTime()) && originalLocalTime.isAfter(s.getLunchStop())){
-                durationDifference = Duration.between(originalLocalTime, s.getStopTime());
-
-                // clock out before grace period
-                if (durationDifference.compareTo(graceDuration) > 0 && durationDifference.compareTo(dockDuration) <= 0){
-                    if (durationDifference.compareTo(dockDuration) < 0){
-                        durationDifference = Duration.between(originalLocalTime, s.getStopTime());
-                        LocalTime dockDifference = (LocalTime)durationDifference.subtractFrom(dockTime);
-                        int dockMinutes = dockDifference.getMinute();
-                        int dockSeconds = dockDifference.getSecond();
-                        adjustedTimestamp = originalTimestamp.minusMinutes(dockMinutes).minusSeconds(dockSeconds);
-                    }
-                    else{
-                        adjustedTimestamp = originalTimestamp.withSecond(0).withNano(0);
-                    }
-                    adjustmentType = PunchAdjustmentType.SHIFT_DOCK;
-                }
-                else if (durationDifference.compareTo(dockDuration) > 0){
-                    durationDifference = Duration.between(timeDifference, intervalTime);
-                    adjustedTimestamp = (LocalDateTime) durationDifference.addTo(originalTimestamp);
-                    adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
-                }
-                else{
-                    adjustedTimestamp = (LocalDateTime) durationDifference.addTo(originalTimestamp);
-                    adjustmentType = PunchAdjustmentType.SHIFT_STOP;
-                }
-            }
-            else if (originalLocalTime.isBefore(s.getLunchStop()) && originalLocalTime.isAfter(s.getLunchStart())){
-                durationDifference = Duration.between(originalLocalTime, s.getLunchStart());
-                adjustedTimestamp = (LocalDateTime) durationDifference.addTo(originalTimestamp);
+            else {
                 adjustmentType = PunchAdjustmentType.LUNCH_START;
             }
         }
+        
+        adjustedTimestamp = LocalTime.ofSecondOfDay(adjTimeSec).atDate(originalTimestamp.toLocalDate());
     }
     
     // prints the original punch details to console
