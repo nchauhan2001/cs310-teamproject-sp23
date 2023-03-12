@@ -32,9 +32,9 @@ public final class DAOUtility {
             Punch punch = punchList.get(i);
 
             /* Add Punch Data to HashMap */
-            punchData.put("id", String.valueOf(punch.getId()));
             punchData.put("badgeid", punch.getBadge().getId());
             punchData.put("terminalid", String.valueOf(punch.getTerminalId()));
+            punchData.put("id", String.valueOf(punch.getId()));
             punchData.put("punchtype", punch.getPunchType().toString());
             punchData.put("adjustmenttype", punch.getAdjustmentType().toString());
             
@@ -142,10 +142,8 @@ public final class DAOUtility {
     }
     
     public static String getPunchListPlusTotalsAsJSON(ArrayList<Punch> punchlist, Shift shift) {
-        final String dateFormat = "E MM/dd/yyyy HH:mm:ss";
         
         JsonObject result = new JsonObject(); 
-        JsonArray jsonData = new JsonArray();
 
         ArrayList<Punch> sortedArray = new ArrayList<>(punchlist);
         
@@ -164,32 +162,8 @@ public final class DAOUtility {
                 
             }
         }
-        
-        for(int i = 0; i < sortedArray.size(); i++) {
-            
-            JsonObject data = new JsonObject();
-            Punch punch = sortedArray.get(i);
-
-            String date = DateTimeFormatter.ofPattern(dateFormat).format(punch.getOriginalTimestamp()).toUpperCase();
-            data.put("originaltimestamp", date);
-            
-            data.put("badgeid", punch.getBadge().getId());
-
-            String adjustedTime = DateTimeFormatter.ofPattern(dateFormat).format(punch.getAdjustedTimestamp()).toUpperCase();
-            data.put("adjustedtimestamp", adjustedTime);
-            
-            data.put("adjustmenttype", punch.getAdjustmentType().toString());
-            data.put("terminalid", String.valueOf(punch.getTerminalId()));
-            data.put("id", String.valueOf(punch.getId()));
-            
-            data.put("punchtype", punch.getPunchType().toString());
-
-            jsonData.add(data);
-            
-        }
-        
-        result.put("punchlist", jsonData);
-        
+             
+        result.put("punchlist", Jsoner.deserialize(getPunchListAsJSON(sortedArray), new JsonArray()));
         result.put("totalminutes", calculateTotalMinutes(sortedArray, shift));
         result.put("absenteeism", calculateAbsenteeism(sortedArray, shift).toString() + "%");
         
