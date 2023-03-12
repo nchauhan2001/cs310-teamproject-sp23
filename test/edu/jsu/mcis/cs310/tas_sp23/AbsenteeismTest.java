@@ -1,3 +1,11 @@
+package edu.jsu.mcis.cs310.tas_sp23;
+
+import edu.jsu.mcis.cs310.tas_sp23.dao.AbsenteeismDAO;
+import edu.jsu.mcis.cs310.tas_sp23.dao.DAOFactory;
+import edu.jsu.mcis.cs310.tas_sp23.dao.DAOUtility;
+import edu.jsu.mcis.cs310.tas_sp23.dao.EmployeeDAO;
+import edu.jsu.mcis.cs310.tas_sp23.dao.PunchDAO;
+import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -32,7 +40,7 @@ public class AbsenteeismTest {
         
         /* Get Pay Period Punch List */
         
-        LocalDate ts = p.getOriginaltimestamp().toLocalDate();
+        LocalDate ts = p.getOriginalTimestamp().toLocalDate();
         LocalDate begin = ts.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         LocalDate end = begin.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
         
@@ -46,7 +54,7 @@ public class AbsenteeismTest {
         
         /* Compute Pay Period Total Absenteeism */
         
-        double percentage = DAOUtility.calculateAbsenteeism(punchlist, s);
+        BigDecimal percentage = DAOUtility.calculateAbsenteeism(punchlist, s);
         
         /* Insert Absenteeism Into Database */
         
@@ -79,7 +87,7 @@ public class AbsenteeismTest {
         
         /* Get Pay Period Punch List */
         
-        LocalDate ts = p.getOriginaltimestamp().toLocalDate();
+        LocalDate ts = p.getOriginalTimestamp().toLocalDate();
         LocalDate begin = ts.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         LocalDate end = begin.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
         
@@ -93,7 +101,7 @@ public class AbsenteeismTest {
         
         /* Compute Pay Period Total Absenteeism */
         
-        double percentage = DAOUtility.calculateAbsenteeism(punchlist, s);
+        BigDecimal percentage = DAOUtility.calculateAbsenteeism(punchlist, s);
         
         /* Insert Absenteeism Into Database */
         
@@ -126,7 +134,7 @@ public class AbsenteeismTest {
         
         /* Get Pay Period Punch List */
         
-        LocalDate ts = p.getOriginaltimestamp().toLocalDate();
+        LocalDate ts = p.getOriginalTimestamp().toLocalDate();
         LocalDate begin = ts.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
         LocalDate end = begin.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
         
@@ -140,7 +148,7 @@ public class AbsenteeismTest {
         
         /* Compute Pay Period Total Absenteeism */
         
-        double percentage = DAOUtility.calculateAbsenteeism(punchlist, s);
+        BigDecimal percentage = DAOUtility.calculateAbsenteeism(punchlist, s);
         
         /* Insert Absenteeism Into Database */
         
