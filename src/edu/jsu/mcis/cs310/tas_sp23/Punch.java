@@ -147,6 +147,9 @@ public class Punch {
                 if (intervalTimeDifference < 60 && timeSec-stopSec > intervalSec){
                     adjustmentType = PunchAdjustmentType.NONE;
                 }
+                else if (timeSec-stopSec > intervalSec){
+                    adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
+                }
                 else{
                     adjustmentType = PunchAdjustmentType.SHIFT_STOP;
                 }
