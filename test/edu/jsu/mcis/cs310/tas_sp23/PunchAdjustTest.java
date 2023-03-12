@@ -95,11 +95,13 @@ public class PunchAdjustTest {
 
         Punch p1 = punchDAO.find(4943);
         Punch p2 = punchDAO.find(5004);
+        Punch p3 = punchDAO.find(5455);
 
         /* Adjust Punches According to Shift Rulesets */
         
         p1.adjust(s2);
         p2.adjust(s2);
+        p3.adjust(s2);
 
         /* Compare Adjusted Timestamps to Expected Values */
         
@@ -108,6 +110,9 @@ public class PunchAdjustTest {
 
         assertEquals("#08D01475 CLOCK OUT: TUE 09/18/2018 21:30:27", p2.printOriginal());
         assertEquals("#08D01475 CLOCK OUT: TUE 09/18/2018 21:30:00 (None)", p2.printAdjusted());
+        
+        assertEquals("#08D01475 CLOCK OUT: FRI 09/21/2018 20:30:51", p3.printOriginal());
+        assertEquals("#08D01475 CLOCK OUT: FRI 09/21/2018 20:30:00 (Shift Stop)", p3.printAdjusted());
 
     }
 
