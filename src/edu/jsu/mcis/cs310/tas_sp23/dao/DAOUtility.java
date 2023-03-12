@@ -50,67 +50,95 @@ public final class DAOUtility {
         return Jsoner.serialize(jsonData);
     }
     
-    public static int calculateTotalMinutes(ArrayList<Punch> dailypunchlist, Shift shift) {
-        int total = 0;
+    public static int calculateTotalMinutes(ArrayList<Punch> punchlist, Shift shift) {
+
+        ArrayList<ArrayList<Punch>> dailypunchlist = new ArrayList<>();
+  
+        ArrayList<Punch> arr = new ArrayList<>();
         
-        Boolean workedBeforeLunch = false;
-        Boolean workedAfterLunch = false;
-        Boolean punchedOutForLunch = false;
-        Boolean punchedInForLunch = false;
+        LocalDate currentDate = punchlist.get(0).getAdjustedTimestamp().toLocalDate();
+
+        for(int i = 0; i < punchlist.size(); i++) {
+
+            if(currentDate.isEqual(punchlist.get(i).getAdjustedTimestamp().toLocalDate())) { // Date is within the current date
+                
+                arr.add(punchlist.get(i));
+                
+            } else { // Date is NOT within the current date
+                
+                currentDate = punchlist.get(i).getAdjustedTimestamp().toLocalDate();          
+                dailypunchlist.add(arr);
+                arr = new ArrayList<>();
+                
+                arr.add(punchlist.get(i));
+                
+            }
+        }
+        
+        if(arr.size() > 0) {
+            dailypunchlist.add(arr);
+        }
+
+                
+        int total = 0;
 
         for(int i = 0; i < dailypunchlist.size(); i++) {
-            Punch punch = dailypunchlist.get(i);
-            
-            // There was not an initial a clock-in. Return the total
-            if(i == 0 && !punch.getPunchType().equals(EventType.CLOCK_IN)) {
-                return total;
-            }
-            
-            // There was never a final clock-out. Return the total
-            if(i == dailypunchlist.size()-1 && !punch.getPunchType().equals(EventType.CLOCK_OUT)) {
-                return total;
-            }
-            
-            // Check if the employee clocked out for lunch
-            if(!punchedOutForLunch && punch.getPunchType().equals(EventType.CLOCK_OUT) && punch.getAdjustedTimestamp().toLocalTime().equals(shift.getLunchStart())) {
-                punchedOutForLunch = true;
-            }
-            
-            // Check if the employee clocked in for lunch
-            if(!punchedInForLunch && punch.getPunchType().equals(EventType.CLOCK_IN) && punch.getAdjustedTimestamp().toLocalTime().equals(shift.getLunchStop())) {
-                punchedInForLunch = true;
-            }
 
-            // Check if the employee worked before lunch
-            if(!workedBeforeLunch && shift.getLunchStart().isAfter(punch.getAdjustedTimestamp().toLocalTime())) {
-                workedBeforeLunch = true;
-            }
+            Boolean punchedOutForLunch = false;
+            Boolean punchedInForLunch = false;
             
-            // Check if the employee worked after lunch
-            if(!workedAfterLunch && shift.getLunchStop().isBefore(punch.getAdjustedTimestamp().toLocalTime())) {
-                workedAfterLunch = true;
-            }
+            int dailyTotal = 0;
             
-            // Check if the punch is a clock in, get the next punch and if it's a clock out, find the difference in minutes and add it to the total of minutes worked
-            if(punch.getPunchType().equals(EventType.CLOCK_IN)) {
-                Punch nextPunch = dailypunchlist.get(i+1);
+            for(int j = 0; j < dailypunchlist.get(i).size(); j++) {
                 
-                if(nextPunch.getPunchType().equals(EventType.CLOCK_OUT)) {
-                    
-                    Duration diff = Duration.between(punch.getAdjustedTimestamp(), nextPunch.getAdjustedTimestamp());
-                    
-                    total += diff.toMinutes();
+                Punch punch = dailypunchlist.get(i).get(j);
 
+                // There was not an initial a clock-in. Return the total
+                if(j == 0 && !punch.getPunchType().equals(EventType.CLOCK_IN)) {
+                    break;
                 }
+
+                // There was never a final clock-out. Return the total
+                if(j == dailypunchlist.get(i).size()-1 && !punch.getPunchType().equals(EventType.CLOCK_OUT)) {
+                    break;
+                }
+
+                // Check if the employee clocked out for lunch
+                if(!punchedOutForLunch && punch.getPunchType().equals(EventType.CLOCK_OUT) && punch.getAdjustedTimestamp().toLocalTime().equals(shift.getLunchStart())) {
+                    punchedOutForLunch = true;
+                }
+
+                // Check if the employee clocked in for lunch
+                if(!punchedInForLunch && punch.getPunchType().equals(EventType.CLOCK_IN) && punch.getAdjustedTimestamp().toLocalTime().equals(shift.getLunchStop())) {
+                    punchedInForLunch = true;
+                }
+
+                // Check if the punch is a clock in, get the next punch and if it's a clock out, find the difference in minutes and add it to the total of minutes worked
+                if(punch.getPunchType().equals(EventType.CLOCK_IN)) {
+                    Punch nextPunch = dailypunchlist.get(i).get(j+1);
+
+                    if(nextPunch.getPunchType().equals(EventType.CLOCK_OUT)) {
+
+                        Duration diff = Duration.between(punch.getAdjustedTimestamp(), nextPunch.getAdjustedTimestamp());
+
+                        dailyTotal += diff.toMinutes();
+
+                    }
+                }
+            
             }
+            
+            // Employee didn't clock in/out for lunch and also met the lunch threshold
+            if(dailyTotal > shift.getLunchThreshold() && !(punchedOutForLunch && punchedInForLunch)) {
+                dailyTotal -= shift.getLunchDuration().toMinutes();  
+            }
+            
+            total += dailyTotal;
+
         }
 
-        // Employee didn't clock in/out for lunch and also DID work before and after lunch
-        if(workedBeforeLunch && workedAfterLunch && !(punchedOutForLunch && punchedInForLunch)) {
-            total -= shift.getLunchDuration().toMinutes();  
-        }
-        
         return total;
+        
     }
     
     public static String getPunchListPlusTotalsAsJSON(ArrayList<Punch> punchlist, Shift shift) {
