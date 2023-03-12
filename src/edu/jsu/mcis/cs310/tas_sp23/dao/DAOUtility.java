@@ -116,8 +116,8 @@ public final class DAOUtility {
     public static String getPunchListPlusTotalsAsJSON(ArrayList<Punch> punchlist, Shift shift) {
         final String dateFormat = "E MM/dd/yyyy HH:mm:ss";
         
-        HashMap<String, String> result = new HashMap<>();
-        ArrayList<HashMap<String, String>> jsonData = new ArrayList<>();
+        JsonObject result = new JsonObject(); 
+        JsonArray jsonData = new JsonArray();
 
         ArrayList<Punch> sortedArray = new ArrayList<>(punchlist);
         
@@ -139,7 +139,7 @@ public final class DAOUtility {
         
         for(int i = 0; i < sortedArray.size(); i++) {
             
-            HashMap<String, String> data = new HashMap<>();
+            JsonObject data = new JsonObject();
             Punch punch = sortedArray.get(i);
 
             String date = DateTimeFormatter.ofPattern(dateFormat).format(punch.getOriginalTimestamp()).toUpperCase();
@@ -160,10 +160,10 @@ public final class DAOUtility {
             
         }
         
-        result.put("punchlist", jsonData.toString());
+        result.put("punchlist", jsonData);
         
-        result.put("totalminutes", Integer.toString(calculateTotalMinutes(sortedArray, shift)));
-        result.put("absenteeism", calculateAbsenteeism(sortedArray, shift).toString());
+        result.put("totalminutes", calculateTotalMinutes(sortedArray, shift));
+        result.put("absenteeism", calculateAbsenteeism(sortedArray, shift).toString() + "%");
         
         return Jsoner.serialize(result);
         
