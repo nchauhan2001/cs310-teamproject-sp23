@@ -106,13 +106,15 @@ public class Punch {
         else if (eventType.equals(EventType.CLOCK_IN)){
 
             if (timeSec < startSec){
+                System.out.println(printOriginal());
+                System.out.println(intervalTimeDifference);
                 if (startSec-timeSec < intervalSec){
                     // even if time is closer to interval increment before shift start
                     // don't adjust backwards, only forwards for shift start
                     adjTimeSec = timeSec + timeDifference;
                     adjustmentType = PunchAdjustmentType.SHIFT_START;
                 }
-                else{
+                else if (intervalTimeDifference < 60 || timeDifference < 60){
                     adjustmentType = PunchAdjustmentType.NONE;
                 }
             }
