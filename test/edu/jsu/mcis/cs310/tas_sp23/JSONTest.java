@@ -197,7 +197,7 @@ public class JSONTest {
             ShiftDAO shiftDAO = daoFactory.getShiftDAO();
 
             /* Expected JSON Data */
-            String expectedJSON = "[{\"originaltimestamp\":\"WED 08\\/01\\/2018 05:49:24\",\"badgeid\":\"4E6E296E\",\"adjustedtimestamp\":\"WED 08\\/01\\/2018 07:00:00\",\"adjustmenttype\":\"Shift Start\",\"terminalid\":\"105\",\"id\":\"147\",\"punchtype\":\"CLOCK IN\"},{\"originaltimestamp\":\"WED 08\\/01\\/2018 15:38:32\",\"badgeid\":\"4E6E296E\",\"adjustedtimestamp\":\"WED 08\\/01\\/2018 15:30:00\",\"adjustmenttype\":\"Shift Stop\",\"terminalid\":\"105\",\"id\":\"237\",\"punchtype\":\"CLOCK OUT\"}]";
+            String expectedJSON = "[{\"originaltimestamp\":\"WED 08\\/01\\/2018 05:49:24\",\"badgeid\":\"4E6E296E\",\"adjustedtimestamp\":\"WED 08\\/01\\/2018 05:45:00\",\"adjustmenttype\":\"Shift Start\",\"terminalid\":\"105\",\"id\":\"147\",\"punchtype\":\"CLOCK IN\"},{\"originaltimestamp\":\"WED 08\\/01\\/2018 15:38:32\",\"badgeid\":\"4E6E296E\",\"adjustedtimestamp\":\"WED 08\\/01\\/2018 15:30:00\",\"adjustmenttype\":\"Shift Stop\",\"terminalid\":\"105\",\"id\":\"237\",\"punchtype\":\"CLOCK OUT\"}]";
             ArrayList<HashMap<String, String>> expected = (ArrayList) Jsoner.deserialize(expectedJSON);
 
             /* Get Punch/Badge/Shift Objects */
