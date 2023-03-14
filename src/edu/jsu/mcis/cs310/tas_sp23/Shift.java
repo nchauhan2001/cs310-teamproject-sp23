@@ -25,7 +25,18 @@ public class Shift {
         this.lunchThreshold = Integer.parseInt(map.get("lunchThreshold"));
         
         this.lunchduration = Duration.between(lunchStart, lunchStop);
-        this.shiftduration = Duration.between(startTime, stopTime);
+        
+        if (desc.equals("Shift 3")){
+            this.shiftduration = Duration.between(startTime, stopTime);
+            LocalTime timeDifference = (LocalTime)this.shiftduration.addTo(LocalTime.MAX);
+            this.shiftduration = Duration.ofHours(timeDifference.getHour()).plus(this.lunchduration);
+            System.out.println(this.shiftduration);
+        }
+        else{
+            this.shiftduration = Duration.between(startTime, stopTime);
+
+        }
+        
     }
     // WEBHOOK TEST
     public int getID(){
