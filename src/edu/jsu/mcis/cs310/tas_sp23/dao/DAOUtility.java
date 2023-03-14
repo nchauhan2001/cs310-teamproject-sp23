@@ -67,7 +67,7 @@ public final class DAOUtility {
                 Punch punch = punchlist.get(i);
                 Punch nextPunch = punchlist.get(i+1);
                 
-                // True if the current Punch and the next punch are not pairs of CLOCK_IN and CLOCK_OUT
+                // True if the current Punch and the next punch are pairs of CLOCK_IN and CLOCK_OUT
                 if(punch.getPunchType().equals(EventType.CLOCK_IN) && nextPunch.getPunchType().equals(EventType.CLOCK_OUT)) {
 
                     // If nextPunch isn't on the same date as currentDate, change the currentDate
