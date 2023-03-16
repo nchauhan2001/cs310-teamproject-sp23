@@ -26,29 +26,24 @@ public class PunchListFindTest {
         PunchDAO punchDAO = daoFactory.getPunchDAO();
 
         /* Create StringBuilders for Test Output */
-        
         StringBuilder s1 = new StringBuilder();
         StringBuilder s2 = new StringBuilder();
 
         /* Create Timestamp and Badge Objects for Punch List */
-        
         LocalDate ts = LocalDate.of(2018, Month.SEPTEMBER, 17);
 
         Badge b = badgeDAO.find("67637925");
 
         /* Retrieve Punch List #1 (created by DAO) */
-        
         ArrayList<Punch> p1 = punchDAO.list(b, ts);
 
         /* Export Punch List #1 Contents to StringBuilder */
-        
         for (Punch p : p1) {
             s1.append(p.printOriginal());
             s1.append("\n");
         }
 
         /* Create Punch List #2 (created manually) */
-        
         ArrayList<Punch> p2 = new ArrayList<>();
 
         /* Add Punches */
@@ -58,14 +53,12 @@ public class PunchListFindTest {
         p2.add(punchDAO.find(4847));
 
         /* Export Punch List #2 Contents to StringBuilder */
-        
         for (Punch p : p2) {
             s2.append(p.printOriginal());
             s2.append("\n");
         }
 
         /* Compare Output Strings */
-        
         assertEquals(s2.toString(), s1.toString());
 
     }
@@ -77,47 +70,39 @@ public class PunchListFindTest {
         PunchDAO punchDAO = daoFactory.getPunchDAO();
 
         /* Create StringBuilders for Test Output */
-        
         StringBuilder s1 = new StringBuilder();
         StringBuilder s2 = new StringBuilder();
 
         /* Create Timestamp and Badge Objects for Punch List */
-        
         LocalDate ts = LocalDate.of(2018, Month.SEPTEMBER, 27);
 
         Badge b = badgeDAO.find("87176FD7");
 
         /* Retrieve Punch List #1 (created by DAO) */
-        
         ArrayList<Punch> p1 = punchDAO.list(b, ts);
 
         /* Export Punch List #1 Contents to StringBuilder */
-        
         for (Punch p : p1) {
             s1.append(p.printOriginal());
             s1.append("\n");
         }
 
         /* Create Punch List #2 (created manually) */
-        
         ArrayList<Punch> p2 = new ArrayList<>();
 
         /* Add Punches */
-        
         p2.add(punchDAO.find(6089));
         p2.add(punchDAO.find(6112));
         p2.add(punchDAO.find(6118));
         p2.add(punchDAO.find(6129));
 
         /* Export Punch List #2 Contents to StringBuilder */
-        
         for (Punch p : p2) {
             s2.append(p.printOriginal());
             s2.append("\n");
         }
 
         /* Compare Output Strings */
-        
         assertEquals(s2.toString(), s1.toString());
 
     }
@@ -129,29 +114,24 @@ public class PunchListFindTest {
         PunchDAO punchDAO = daoFactory.getPunchDAO();
 
         /* Create StringBuilders for Test Output */
-        
         StringBuilder s1 = new StringBuilder();
         StringBuilder s2 = new StringBuilder();
 
         /* Create Timestamp and Badge Objects for Punch List */
-        
         LocalDate ts = LocalDate.of(2018, Month.SEPTEMBER, 5);
 
         Badge b = badgeDAO.find("95497F63");
 
         /* Retrieve Punch List #1 (created by DAO) */
-        
         ArrayList<Punch> p1 = punchDAO.list(b, ts);
 
         /* Export Punch List #1 Contents to StringBuilder */
-        
         for (Punch p : p1) {
             s1.append(p.printOriginal());
             s1.append("\n");
         }
 
         /* Create Punch List #2 (created manually) */
-        
         ArrayList<Punch> p2 = new ArrayList<>();
 
         /* Add Punches */
@@ -159,16 +139,97 @@ public class PunchListFindTest {
         p2.add(punchDAO.find(3482));
 
         /* Export Punch List #2 Contents to StringBuilder */
-        
         for (Punch p : p2) {
             s2.append(p.printOriginal());
             s2.append("\n");
         }
 
         /* Compare Output Strings */
-        
         assertEquals(s2.toString(), s1.toString());
 
     }
 
+    @Test
+    public void testFindPunchList4() {
+
+        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+        PunchDAO punchDAO = daoFactory.getPunchDAO();
+
+        /* Create StringBuilders for Test Output */
+        StringBuilder s1 = new StringBuilder();
+        StringBuilder s2 = new StringBuilder();
+
+        /* Create Timestamp and Badge Objects for Punch List */
+        LocalDate ts = LocalDate.of(2018, Month.SEPTEMBER, 18);
+
+        Badge b = badgeDAO.find("690538BA");
+
+        /* Retrieve Punch List #1 (created by DAO) */
+        ArrayList<Punch> p1 = punchDAO.list(b, ts);
+
+        /* Export Punch List #1 Contents to StringBuilder */
+        for (Punch p : p1) {
+            s1.append(p.printOriginal());
+            s1.append("\n");
+        }
+
+        /* Create Punch List #2 (created manually) */
+        ArrayList<Punch> p2 = new ArrayList<>();
+
+        /* Add Punches */
+        p2.add(punchDAO.find(4947));
+        p2.add(punchDAO.find(4955));
+
+        /* Export Punch List #2 Contents to StringBuilder */
+        for (Punch p : p2) {
+            s2.append(p.printOriginal());
+            s2.append("\n");
+        }
+
+        /* Compare Output Strings */
+        assertEquals(s2.toString(), s1.toString());
+
+    }
+
+    @Test
+    public void testFindPunchList5() {
+
+        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+        PunchDAO punchDAO = daoFactory.getPunchDAO();
+
+        /* Create StringBuilders for Test Output */
+        StringBuilder s1 = new StringBuilder();
+        StringBuilder s2 = new StringBuilder();
+
+        /* Create Timestamp and Badge Objects for Punch List */
+        LocalDate ts = LocalDate.of(2018, Month.SEPTEMBER, 18);
+
+        Badge b = badgeDAO.find("DFDFE648");
+
+        /* Retrieve Punch List #1 (created by DAO) */
+        ArrayList<Punch> p1 = punchDAO.list(b, ts);
+
+        /* Export Punch List #1 Contents to StringBuilder */
+        for (Punch p : p1) {
+            s1.append(p.printOriginal());
+            s1.append("\n");
+        }
+
+        /* Create Punch List #2 (created manually) */
+        ArrayList<Punch> p2 = new ArrayList<>();
+
+        /* Add Punches */
+        p2.add(punchDAO.find(4895));
+        p2.add(punchDAO.find(4988));
+
+        /* Export Punch List #2 Contents to StringBuilder */
+        for (Punch p : p2) {
+            s2.append(p.printOriginal());
+            s2.append("\n");
+        }
+
+        /* Compare Output Strings */
+        assertEquals(s2.toString(), s1.toString());
+
+    }
 }
