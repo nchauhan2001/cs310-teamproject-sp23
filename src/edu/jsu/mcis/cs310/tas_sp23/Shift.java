@@ -18,9 +18,10 @@ public class Shift {
         this.id = Integer.parseInt(map.get("id"));
         this.desc = map.get("description");
         
-        
+        this.defaultschedule = new DailySchedule(map);
+
     }
-    // WEBHOOK TEST
+
     public int getID(){
         return id;
     }
