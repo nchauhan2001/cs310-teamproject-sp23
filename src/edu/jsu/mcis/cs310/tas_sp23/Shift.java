@@ -78,13 +78,7 @@ public class Shift {
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append(desc).append(": ");
-        s.append(startTime).append(" - ");
-        s.append(stopTime).append(" (");
-        s.append(shiftduration.toMinutes()).append(" minutes); Lunch: ");
-        s.append(lunchStart).append(" - ");
-        s.append(lunchStop).append(" (");
-        s.append(lunchduration.toMinutes()).append(" minutes)");
-
+        s.append(defaultschedule.getStartTime()).append(" - ");
         return s.toString();
     }
 }

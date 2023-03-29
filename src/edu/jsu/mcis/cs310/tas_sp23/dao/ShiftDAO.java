@@ -7,7 +7,7 @@ import edu.jsu.mcis.cs310.tas_sp23.Shift;
 
 public class ShiftDAO {
 
-    private static final String QUERY_FIND = "SELECT * FROM shift WHERE id = ?";
+    private static final String QUERY_FIND = "select * from shift join dailyschedule on shift.dailyscheduleid = dailyschedule.id where dailyschedule.id = ?";
     private static final String QUERY_BADGE = "SELECT * FROM employee WHERE badgeid = ?";
     private final DAOFactory daoFactory;
 
@@ -42,11 +42,11 @@ public class ShiftDAO {
                         
                         HashMap<String, String> map = new HashMap<>();
                         
-                        id = rs.getInt("id");
+                        id = rs.getInt("shift.id");
                         String shiftid = String.valueOf(id);
                         map.put("id", shiftid);
                         
-                        String description = rs.getString("description");
+                        String description = rs.getString("shift.description");
                         map.put("description", description);
                         
                         String startTime = rs.getString("shiftstart");
