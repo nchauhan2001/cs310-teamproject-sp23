@@ -1,5 +1,7 @@
 package edu.jsu.mcis.cs310.tas_sp23;
 
+import edu.jsu.mcis.cs310.tas_sp23.dao.DAOFactory;
+import edu.jsu.mcis.cs310.tas_sp23.dao.ShiftDAO;
 import java.util.*;
 import java.time.*;
 
@@ -12,13 +14,19 @@ public class Shift {
     // N.B. These are to be measured in minutes!!! - William H.
     private Duration lunchduration, shiftduration;
     private DailySchedule defaultschedule;
+    
+    private HashMap<Integer, DailySchedule> hm = new HashMap<>();
 
     public Shift(HashMap<String, String> map) {
         
         this.id = Integer.parseInt(map.get("id"));
         this.desc = map.get("description");
-        
+
         this.defaultschedule = new DailySchedule(map);
+        
+        for(int i = 0; i < 5; i++) {
+            hm.put(i, this.defaultschedule);
+        }
 
     }
 
@@ -70,8 +78,12 @@ public class Shift {
         return defaultschedule.getShiftDuration();
     }
     
-    public DailySchedule getDefaultschedule() {
-        return defaultschedule;
+    public DailySchedule getDefaultschedule(DayOfWeek dow) {
+        return hm.get(dow.getValue());
+    }
+    
+    public DailySchedule setDefaultschedule(DayOfWeek dow, DailySchedule ds) {
+        return hm.put(dow.getValue(), ds);
     }
 
     @Override
