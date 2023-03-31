@@ -42,11 +42,11 @@ public class ShiftDAO {
                         
                         HashMap<String, String> map = new HashMap<>();
                         
-                        id = rs.getInt("shift.id");
+                        id = rs.getInt("id");
                         String shiftid = String.valueOf(id);
                         map.put("id", shiftid);
                         
-                        String description = rs.getString("shift.description");
+                        String description = rs.getString("description");
                         map.put("description", description);
                         
                         String startTime = rs.getString("shiftstart");

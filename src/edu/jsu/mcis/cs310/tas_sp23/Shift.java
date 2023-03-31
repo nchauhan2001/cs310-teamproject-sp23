@@ -31,43 +31,43 @@ public class Shift {
     }
 
     public LocalTime getStartTime() {
-        return startTime;
+        return defaultschedule.getStartTime();
     }
 
     public LocalTime getStopTime() {
-        return stopTime;
+        return defaultschedule.getStopTime();
     }
     
     public int getGracePeriod(){
-        return gracePeriod;
+        return defaultschedule.getGracePeriod();
     }
     
     public int getDockPenalty(){
-        return dockPenalty;
+        return defaultschedule.getDockPenalty();
     }
     
     public int getRoundInterval(){
-        return roundInterval;
+        return defaultschedule.getRoundInterval();
     }
 
     public LocalTime getLunchStart() {
-        return lunchStart;
+        return defaultschedule.getLunchStart();
     }
 
     public LocalTime getLunchStop() {
-        return lunchStop;
+        return defaultschedule.getLunchStop();
     }
     
     public int getLunchThreshold(){
-        return lunchThreshold;
+        return defaultschedule.getLunchThreshold();
     }
 
     public Duration getLunchDuration() {
-        return lunchduration;
+        return defaultschedule.getLunchDuration();
     }
 
     public Duration getShiftDuration() {
-        return shiftduration;
+        return defaultschedule.getShiftDuration();
     }
     
     public DailySchedule getDefaultschedule() {
@@ -78,7 +78,12 @@ public class Shift {
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append(desc).append(": ");
-        s.append(defaultschedule.getStartTime()).append(" - ");
+        s.append(getStartTime()).append(" - ");
+        s.append(getStopTime()).append(" (");
+        s.append(getShiftDuration().toMinutes()).append(" minutes); Lunch: ");
+        s.append(getLunchStart()).append(" - ");
+        s.append(getLunchStop()).append(" (");
+        s.append(getLunchDuration().toMinutes()).append(" minutes)");
         return s.toString();
     }
 }
