@@ -69,4 +69,12 @@ public class DailySchedule {
         return lunchThreshold;
     }
     
+    public Duration getLunchDuration() {
+        return lunchduration;
+    }
+
+    public Duration getShiftDuration() {
+        return shiftduration;
+    }
+    
 }
