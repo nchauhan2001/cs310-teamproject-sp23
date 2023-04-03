@@ -8,10 +8,9 @@ package edu.jsu.mcis.cs310.tas_sp23;
  * The adjustmentType is the type of punch adjustment that was made.
  */
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
+import java.time.DayOfWeek;
 import java.time.format.DateTimeFormatter;
 
 public class Punch {
@@ -77,15 +76,15 @@ public class Punch {
     }
         
     public void adjust(Shift s){
-        String dayOfWeek = originalTimestamp.getDayOfWeek().toString();
-        
-        int startSec = s.getStartTime().toSecondOfDay();
-        int LStartSec = s.getLunchStart().toSecondOfDay();
-        int LStopSec = s.getLunchStop().toSecondOfDay();
-        int stopSec = s.getStopTime().toSecondOfDay();
-        int dockSec = s.getDockPenalty() * 60;
-        int graceSec = s.getGracePeriod() * 60;
-        int intervalSec = s.getRoundInterval() * 60;
+        DayOfWeek dayOfWeek = originalTimestamp.getDayOfWeek();
+
+        int startSec = s.getDefaultschedule(dayOfWeek).getStartTime().toSecondOfDay();
+        int LStartSec = s.getDefaultschedule(dayOfWeek).getLunchStart().toSecondOfDay();
+        int LStopSec = s.getDefaultschedule(dayOfWeek).getLunchStop().toSecondOfDay();
+        int stopSec = s.getDefaultschedule(dayOfWeek).getStopTime().toSecondOfDay();
+        int dockSec = s.getDefaultschedule(dayOfWeek).getDockPenalty() * 60;
+        int graceSec = s.getDefaultschedule(dayOfWeek).getGracePeriod() * 60;
+        int intervalSec = s.getDefaultschedule(dayOfWeek).getRoundInterval() * 60;
         int timeSec = originalTimestamp.toLocalTime().toSecondOfDay();
         
         int intervalTimeDifference = timeSec % intervalSec;
@@ -99,7 +98,7 @@ public class Punch {
             adjTimeSec = timeSec - intervalTimeDifference;
         }
         
-        if (dayOfWeek.equals("SATURDAY") || dayOfWeek.equals("SUNDAY")){
+        if (dayOfWeek.equals(dayOfWeek.SATURDAY) || dayOfWeek.equals(dayOfWeek.SUNDAY)){
             adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
         }
         /* CLOCK IN */

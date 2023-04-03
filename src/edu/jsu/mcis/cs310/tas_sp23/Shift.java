@@ -25,7 +25,7 @@ public class Shift {
         this.defaultschedule = new DailySchedule(map);
         
         for(int i = 0; i < 5; i++) {
-            hm.put(i, this.defaultschedule);
+            hm.put(i+1, this.defaultschedule);
         }
 
     }
@@ -79,7 +79,11 @@ public class Shift {
     }
     
     public DailySchedule getDefaultschedule(DayOfWeek dow) {
-        return hm.get(dow.getValue());
+        if(hm.containsKey(dow.getValue())) { // The hashmap of DailySchedule does not include this day of week
+            return hm.get(dow.getValue());
+        } else {
+            return defaultschedule;
+        }
     }
     
     public DailySchedule setDefaultschedule(DayOfWeek dow, DailySchedule ds) {

@@ -59,6 +59,7 @@ public final class DAOUtility {
         boolean punchedInForLunch = false;
         
         LocalDate currentDate = punchlist.get(0).getAdjustedTimestamp().toLocalDate(); // The current date of the punches we are working with
+        DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
         
         for(int i = 0; i < punchlist.size(); i++) {
 
@@ -76,12 +77,12 @@ public final class DAOUtility {
                     }
                         
                     // Check if the employee clocked out for lunch
-                    if(!punchedOutForLunch && punch.getPunchType().equals(EventType.CLOCK_OUT) && punch.getAdjustedTimestamp().toLocalTime().equals(shift.getLunchStart())) {
+                    if(!punchedOutForLunch && punch.getPunchType().equals(EventType.CLOCK_OUT) && punch.getAdjustedTimestamp().toLocalTime().equals(shift.getDefaultschedule(dayOfWeek).getLunchStart())) {
                         punchedOutForLunch = true;
                     }
 
                     // Check if the employee clocked in for lunch
-                    if(!punchedInForLunch && punch.getPunchType().equals(EventType.CLOCK_IN) && punch.getAdjustedTimestamp().toLocalTime().equals(shift.getLunchStop())) {
+                    if(!punchedInForLunch && punch.getPunchType().equals(EventType.CLOCK_IN) && punch.getAdjustedTimestamp().toLocalTime().equals(shift.getDefaultschedule(dayOfWeek).getLunchStop())) {
                         punchedInForLunch = true;
                     }
 
