@@ -79,9 +79,9 @@ public class Shift {
     }
     
     public DailySchedule getDefaultschedule(DayOfWeek dow) {
-        if(hm.containsKey(dow.getValue())) { // The hashmap of DailySchedule does not include this day of week
+        if(hm.containsKey(dow.getValue())) { // The hashmap of DailySchedule does include this day of week
             return hm.get(dow.getValue());
-        } else {
+        } else { // It does not include the day of week
             return defaultschedule;
         }
     }
