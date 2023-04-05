@@ -14,14 +14,14 @@ public class DailySchedule {
         
         String desc = map.get("description");
        
-        this.startTime = LocalTime.parse( map.get("startTime"));
-        this.stopTime = LocalTime.parse( map.get("stopTime"));
-        this.gracePeriod = Integer.parseInt(map.get("gracePeriod"));
-        this.dockPenalty = Integer.parseInt(map.get("dockPenalty"));
-        this.roundInterval = Integer.parseInt(map.get("roundInterval"));
-        this.lunchStart = LocalTime.parse( map.get("lunchStart"));
-        this.lunchStop = LocalTime.parse( map.get("lunchStop"));
-        this.lunchThreshold = Integer.parseInt(map.get("lunchThreshold"));
+        this.startTime = LocalTime.parse( map.get("shiftstart"));
+        this.stopTime = LocalTime.parse( map.get("shiftstop"));
+        this.gracePeriod = Integer.parseInt(map.get("graceperiod"));
+        this.dockPenalty = Integer.parseInt(map.get("dockpenalty"));
+        this.roundInterval = Integer.parseInt(map.get("roundinterval"));
+        this.lunchStart = LocalTime.parse( map.get("lunchstart"));
+        this.lunchStop = LocalTime.parse( map.get("lunchstop"));
+        this.lunchThreshold = Integer.parseInt(map.get("lunchthreshold"));
         
         this.lunchduration = Duration.between(lunchStart, lunchStop);
         
@@ -29,7 +29,6 @@ public class DailySchedule {
             this.shiftduration = Duration.between(startTime, stopTime);
             LocalTime timeDifference = (LocalTime)this.shiftduration.addTo(LocalTime.MAX);
             this.shiftduration = Duration.ofHours(timeDifference.getHour()).plus(this.lunchduration);
-            System.out.println(this.shiftduration);
         }
         else{
             this.shiftduration = Duration.between(startTime, stopTime);
@@ -77,4 +76,15 @@ public class DailySchedule {
         return shiftduration;
     }
     
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append(getStartTime()).append(" - ");
+        s.append(getStopTime()).append(" (");
+        s.append(getShiftDuration().toMinutes()).append(" minutes); Lunch: ");
+        s.append(getLunchStart()).append(" - ");
+        s.append(getLunchStop()).append(" (");
+        s.append(getLunchDuration().toMinutes()).append(" minutes)");
+        return s.toString();
+    }
 }
