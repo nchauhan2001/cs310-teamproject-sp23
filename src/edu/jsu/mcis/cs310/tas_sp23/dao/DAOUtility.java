@@ -77,12 +77,12 @@ public final class DAOUtility {
                     }
                         
                     // Check if the employee clocked out for lunch
-                    if(!punchedOutForLunch && punch.getPunchType().equals(EventType.CLOCK_OUT) && punch.getAdjustedTimestamp().toLocalTime().equals(shift.getDefaultschedule(dayOfWeek).getLunchStart())) {
+                    if(!punchedOutForLunch && punch.getPunchType().equals(EventType.CLOCK_OUT) && punch.getAdjustedTimestamp().toLocalTime().equals(shift.getDailyschedule(dayOfWeek).getLunchStart())) {
                         punchedOutForLunch = true;
                     }
 
                     // Check if the employee clocked in for lunch
-                    if(!punchedInForLunch && punch.getPunchType().equals(EventType.CLOCK_IN) && punch.getAdjustedTimestamp().toLocalTime().equals(shift.getDefaultschedule(dayOfWeek).getLunchStop())) {
+                    if(!punchedInForLunch && punch.getPunchType().equals(EventType.CLOCK_IN) && punch.getAdjustedTimestamp().toLocalTime().equals(shift.getDailyschedule(dayOfWeek).getLunchStop())) {
                         punchedInForLunch = true;
                     }
 
@@ -155,7 +155,13 @@ public final class DAOUtility {
     
     public static BigDecimal calculateAbsenteeism(ArrayList<Punch> punchlist, Shift s){
         
-        double scheduledMinutes = 2400;
+        double scheduledMinutes = 0;
+
+        for(int i = 1; i <= 5; i++){
+            Duration lunchDuration = s.getDailyschedule(DayOfWeek.of(i)).getLunchDuration();
+            Duration shiftDuration = s.getDailyschedule(DayOfWeek.of(i)).getShiftDuration().minus(lunchDuration);
+            scheduledMinutes += shiftDuration.toMinutes();
+        }
         BigDecimal percentage;
         
         int totalMinutes = calculateTotalMinutes(punchlist, s);

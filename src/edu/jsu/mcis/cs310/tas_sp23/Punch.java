@@ -11,6 +11,8 @@ package edu.jsu.mcis.cs310.tas_sp23;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 
 public class Punch {
@@ -77,14 +79,14 @@ public class Punch {
         
     public void adjust(Shift s){
         DayOfWeek dayOfWeek = originalTimestamp.getDayOfWeek();
-
-        int startSec = s.getDefaultschedule(dayOfWeek).getStartTime().toSecondOfDay();
-        int LStartSec = s.getDefaultschedule(dayOfWeek).getLunchStart().toSecondOfDay();
-        int LStopSec = s.getDefaultschedule(dayOfWeek).getLunchStop().toSecondOfDay();
-        int stopSec = s.getDefaultschedule(dayOfWeek).getStopTime().toSecondOfDay();
-        int dockSec = s.getDefaultschedule(dayOfWeek).getDockPenalty() * 60;
-        int graceSec = s.getDefaultschedule(dayOfWeek).getGracePeriod() * 60;
-        int intervalSec = s.getDefaultschedule(dayOfWeek).getRoundInterval() * 60;
+        
+        int startSec = s.getDailyschedule(dayOfWeek).getStartTime().toSecondOfDay();
+        int LStartSec = s.getDailyschedule(dayOfWeek).getLunchStart().toSecondOfDay();
+        int LStopSec = s.getDailyschedule(dayOfWeek).getLunchStop().toSecondOfDay();
+        int stopSec = s.getDailyschedule(dayOfWeek).getStopTime().toSecondOfDay();
+        int dockSec = s.getDailyschedule(dayOfWeek).getDockPenalty() * 60;
+        int graceSec = s.getDailyschedule(dayOfWeek).getGracePeriod() * 60;
+        int intervalSec = s.getDailyschedule(dayOfWeek).getRoundInterval() * 60;
         int timeSec = originalTimestamp.toLocalTime().toSecondOfDay();
         
         int intervalTimeDifference = timeSec % intervalSec;

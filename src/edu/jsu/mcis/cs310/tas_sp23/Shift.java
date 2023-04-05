@@ -1,18 +1,11 @@
 package edu.jsu.mcis.cs310.tas_sp23;
 
-import edu.jsu.mcis.cs310.tas_sp23.dao.DAOFactory;
-import edu.jsu.mcis.cs310.tas_sp23.dao.ShiftDAO;
 import java.util.*;
 import java.time.*;
 
 public class Shift {
-    private int id, gracePeriod, dockPenalty;
+    private int id;
     private String desc;
-    private LocalTime startTime, stopTime, lunchStart, lunchStop;
-    private int lunchThreshold, roundInterval;
-    // These are the parameters for a given emplyee's shift. 
-    // N.B. These are to be measured in minutes!!! - William H.
-    private Duration lunchduration, shiftduration;
     private DailySchedule defaultschedule;
     
     private HashMap<Integer, DailySchedule> hm = new HashMap<>();
@@ -24,8 +17,11 @@ public class Shift {
 
         this.defaultschedule = new DailySchedule(map);
         
-        for(int i = 0; i < 5; i++) {
-            hm.put(i+1, this.defaultschedule);
+        int mon = DayOfWeek.MONDAY.getValue();
+        int fri = DayOfWeek.FRIDAY.getValue();
+        
+        for(int i = mon; i <= fri; i++) {
+            hm.put(i, this.defaultschedule);
         }
 
     }
@@ -78,7 +74,12 @@ public class Shift {
         return defaultschedule.getShiftDuration();
     }
     
-    public DailySchedule getDefaultschedule(DayOfWeek dow) {
+    public DailySchedule getDefaultschedule(){
+        return this.defaultschedule;
+    }
+    
+    public DailySchedule getDailyschedule(DayOfWeek dow) {
+        
         if(hm.containsKey(dow.getValue())) { // The hashmap of DailySchedule does include this day of week
             return hm.get(dow.getValue());
         } else { // It does not include the day of week
@@ -86,7 +87,7 @@ public class Shift {
         }
     }
     
-    public DailySchedule setDefaultschedule(DayOfWeek dow, DailySchedule ds) {
+    public DailySchedule setDailyschedule(DayOfWeek dow, DailySchedule ds) {
         return hm.put(dow.getValue(), ds);
     }
 
