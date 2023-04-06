@@ -7,6 +7,7 @@ import edu.jsu.mcis.cs310.tas_sp23.DailySchedule;
 import edu.jsu.mcis.cs310.tas_sp23.Shift;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class ShiftDAO {
 
@@ -161,32 +162,71 @@ public class ShiftDAO {
                 if (hasresults) {
 
                     rs = ps.getResultSet();
+                    
+                    ShiftDAO shiftdao = daoFactory.getShiftDAO();
+                    shift = shiftdao.find(badge);
 
                     while (rs.next()) {
                         
-                        ShiftDAO shiftdao = daoFactory.getShiftDAO();
-                        shift = shiftdao.find(badge);
-                        
                         LocalDate date = rs.getTimestamp("start").toLocalDateTime().toLocalDate();
-                        int day = rs.getInt("day");               
+                        int dayNum = rs.getInt("day");
+                        DayOfWeek day = localDate.getDayOfWeek().plus(dayNum);
+                        String end = rs.getString("end");
                         DailySchedule daily;
+                        boolean recurring;
                         
-                        if (localDate.equals(date)){
-                            
-                            int count = rs.findColumn("dailyschedule.id");
-                            HashMap<String, String> map = new HashMap<>();
-                            
-                            for (int i = count; i <= rs.getMetaData().getColumnCount(); i++){
-                                String key = rs.getMetaData().getColumnName(i);
-                                String value = rs.getString(i);
-                                map.put(key, value);
-                            }
-                            
-                            map.put("description", shift.getDescription());
-                            
-                            daily = new DailySchedule(map);
-                            shift.setDailyschedule(DayOfWeek.of(day), daily);
+                        if (end == null && rs.getString("badgeid").equals(badge.getId())){
+                            recurring = true;
+                        }
+                        else{
+                            recurring = false;
+                        }
+                        
+                        if (recurring){
+                            if (localDate.equals(date) || localDate.isAfter(date)){
+                                
+                                int count = rs.findColumn("dailyschedule.id");
+                                HashMap<String, String> map = new HashMap<>();
 
+                                for (int i = count; i <= rs.getMetaData().getColumnCount(); i++){
+                                    String key = rs.getMetaData().getColumnName(i);
+                                    String value = rs.getString(i);
+                                    map.put(key, value);
+                                }
+
+                                map.put("description", shift.getDescription());
+
+                                daily = new DailySchedule(map);
+                                shift.setDailyschedule(day, daily);
+                            }
+                        }
+                        else{
+                            if (localDate.equals(date)){
+                            
+                                int count = rs.findColumn("dailyschedule.id");
+                                HashMap<String, String> map = new HashMap<>();
+
+                                for (int i = count; i <= rs.getMetaData().getColumnCount(); i++){
+                                    String key = rs.getMetaData().getColumnName(i);
+                                    String value = rs.getString(i);
+                                    map.put(key, value);
+                                }
+
+                                map.put("description", shift.getDescription());
+
+                                daily = new DailySchedule(map);
+
+                                if (rs.getString("badgeid") == null){
+                                    shift.setDailyschedule(day, daily);
+
+                                }
+                                else if (badge.getId().equals(rs.getString("badgeid"))){
+
+                                    shift.setDailyschedule(day, daily);
+
+                                }
+                            }
+                        
                         }
                         
                         
