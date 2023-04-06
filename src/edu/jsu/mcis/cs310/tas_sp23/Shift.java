@@ -87,8 +87,8 @@ public class Shift {
         }
     }
     
-    public DailySchedule setDailyschedule(DayOfWeek dow, DailySchedule ds) {
-        return hm.put(dow.getValue(), ds);
+    public void setDailyschedule(DayOfWeek dow, DailySchedule ds) {
+        hm.put(dow.getValue(), ds);
     }
 
     @Override

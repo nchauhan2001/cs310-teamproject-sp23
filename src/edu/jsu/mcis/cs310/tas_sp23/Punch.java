@@ -93,7 +93,7 @@ public class Punch {
         int timeDifference = intervalSec - intervalTimeDifference;
         int adjTimeSec;
         
-        if (intervalTimeDifference > intervalSec/2){
+        if (intervalTimeDifference >= intervalSec/2){
             adjTimeSec = timeSec + timeDifference;
         }
         else{
@@ -112,6 +112,9 @@ public class Punch {
                     // don't adjust backwards, only forwards for shift start
                     adjTimeSec = timeSec + timeDifference;
                     adjustmentType = PunchAdjustmentType.SHIFT_START;
+                }
+                else if (startSec - timeSec > intervalSec && intervalTimeDifference > 60){
+                    adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
                 }
                 else{
                     adjustmentType = PunchAdjustmentType.NONE;
@@ -152,6 +155,7 @@ public class Punch {
                     adjustmentType = PunchAdjustmentType.INTERVAL_ROUND;
                 }
                 else{
+                    adjTimeSec = timeSec - intervalTimeDifference;
                     adjustmentType = PunchAdjustmentType.SHIFT_STOP;
                 }
             }
