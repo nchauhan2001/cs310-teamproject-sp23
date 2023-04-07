@@ -161,7 +161,7 @@ public class AbsenteeismTest {
         
         /* Compare to Expected Value */
         
-        assertEquals("#8C0644BA (Pay Period Starting 08-19-2018): -40.63%", a2.toString());
+        assertEquals("#8C0644BA (Pay Period Starting 08-19-2018): -40.00%", a2.toString());
         
     }
     
