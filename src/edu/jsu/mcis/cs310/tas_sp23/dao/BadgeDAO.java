@@ -6,6 +6,7 @@ import java.sql.*;
 public class BadgeDAO {
 
     private static final String QUERY_FIND = "SELECT * FROM badge WHERE id = ?";
+    private static final String QUERY_DELETE = "DELETE FROM badge WHERE id = ?";
 
     private final DAOFactory daoFactory;
 
@@ -75,4 +76,32 @@ public class BadgeDAO {
 
     }
 
+    public boolean delete(String id) {
+        
+        int rowsAffected = 0;
+        
+        PreparedStatement ps = null;
+        
+        try {
+            
+            Connection conn = daoFactory.getConnection();
+            ps = conn.prepareStatement(QUERY_DELETE);
+            ps.setString(1, id);
+            rowsAffected = ps.executeUpdate();
+            
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+            
+        } finally {
+            
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+        }
+        return rowsAffected == 1;
+    }
 }
