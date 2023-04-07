@@ -2,10 +2,12 @@ package edu.jsu.mcis.cs310.tas_sp23.dao;
 
 import edu.jsu.mcis.cs310.tas_sp23.Badge;
 import java.sql.*;
+import java.util.zip.CRC32;
 
 public class BadgeDAO {
 
     private static final String QUERY_FIND = "SELECT * FROM badge WHERE id = ?";
+    private static final String QUERY_CREATE = "INSERT INTO badge (id, description) VALUES (?, ?)";
     private static final String QUERY_DELETE = "DELETE FROM badge WHERE id = ?";
 
     private final DAOFactory daoFactory;
@@ -74,6 +76,46 @@ public class BadgeDAO {
 
         return badge;
 
+    }
+    
+        public boolean create(Badge badge) {
+        
+        boolean inserted = false;
+            
+        PreparedStatement ps = null;
+
+        try {
+
+            Connection conn = daoFactory.getConnection();
+
+            if (conn.isValid(0)) {
+                
+                ps = conn.prepareStatement(QUERY_CREATE);
+                ps.setString(1, badge.getId());
+                ps.setString(2, badge.getDescription());
+
+                int updateCount = ps.executeUpdate();
+
+                if (updateCount == 1) {
+                    inserted = true;
+                }
+                 
+            }
+
+        } catch (SQLException e) {
+
+            throw new DAOException(e.getMessage());
+
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    throw new DAOException(e.getMessage());
+                }
+            }
+        }
+        return inserted;
     }
 
     public boolean delete(String id) {
