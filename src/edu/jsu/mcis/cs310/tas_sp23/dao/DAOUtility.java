@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import com.github.cliftonlabs.json_simple.*;
 import edu.jsu.mcis.cs310.tas_sp23.EventType;
 import edu.jsu.mcis.cs310.tas_sp23.Punch;
+import edu.jsu.mcis.cs310.tas_sp23.PunchAdjustmentType;
 import edu.jsu.mcis.cs310.tas_sp23.Shift;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -77,12 +78,12 @@ public final class DAOUtility {
                     }
                         
                     // Check if the employee clocked out for lunch
-                    if(!punchedOutForLunch && punch.getPunchType().equals(EventType.CLOCK_OUT) && punch.getAdjustedTimestamp().toLocalTime().equals(shift.getDailyschedule(dayOfWeek).getLunchStart())) {
+                    if(!punchedOutForLunch && punch.getAdjustmentType() == PunchAdjustmentType.LUNCH_START) {
                         punchedOutForLunch = true;
                     }
 
                     // Check if the employee clocked in for lunch
-                    if(!punchedInForLunch && punch.getPunchType().equals(EventType.CLOCK_IN) && punch.getAdjustedTimestamp().toLocalTime().equals(shift.getDailyschedule(dayOfWeek).getLunchStop())) {
+                    if(!punchedInForLunch && punch.getAdjustmentType() == PunchAdjustmentType.LUNCH_STOP) {
                         punchedInForLunch = true;
                     }
 
