@@ -5,4 +5,4 @@ Data layers were implemented through the use of DAOs (data access objects).
 
 The entirety of the source code for this project was written in Java.
 
-This project was created by Nidhi Chauhan, Logan Driver,  Matthew Dylan, Matthew Hayes, William Hicks, and Kolton Guthrie.
+This project was created by Nidhi Chauhan, Logan Driver, Cade Hardin, Matthew Hayes, William Hicks, and Kolton Guthrie.
