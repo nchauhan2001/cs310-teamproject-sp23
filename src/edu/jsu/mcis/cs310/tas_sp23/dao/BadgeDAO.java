@@ -2,7 +2,6 @@ package edu.jsu.mcis.cs310.tas_sp23.dao;
 
 import edu.jsu.mcis.cs310.tas_sp23.Badge;
 import java.sql.*;
-import java.util.zip.CRC32;
 
 public class BadgeDAO {
 
