@@ -194,27 +194,29 @@ public class PunchDAO {
                 }
                 
                 // Check for the last punch of the day and add an "extra" punch if needed
-                Punch lastPunch = punches.get(punches.size() - 1);
+                if(punches.size() > 0) {
+                    Punch lastPunch = punches.get(punches.size() - 1);
 
-                if (lastPunch.getPunchType() == EventType.CLOCK_IN){
-                    LocalDate nextFirstPunch = lastPunch.getOriginalTimestamp().toLocalDate().plusDays(1);
+                    if (lastPunch.getPunchType() == EventType.CLOCK_IN){
+                        LocalDate nextFirstPunch = lastPunch.getOriginalTimestamp().toLocalDate().plusDays(1);
 
-                    ps = conn.prepareStatement(QUERY_LIST);
+                        ps = conn.prepareStatement(QUERY_LIST);
 
-                    ps.setString(1, badge.getId());
-                    ps.setDate(2, Date.valueOf(nextFirstPunch));
-                    hasResults = ps.execute();
-                    
-                    if (hasResults){
-                        rs = ps.getResultSet();
-                        rs.next();
+                        ps.setString(1, badge.getId());
+                        ps.setDate(2, Date.valueOf(nextFirstPunch));
+                        hasResults = ps.execute();
 
-                        EventType nextPunchType = EventType.values()[rs.getInt("eventtypeid")];
+                        if (hasResults){
+                            rs = ps.getResultSet();
+                            rs.next();
 
-                        if (nextPunchType == EventType.CLOCK_OUT || nextPunchType == EventType.TIME_OUT){
-                            Punch punch = find(rs.getInt("id"));
-                            
-                            punches.add(punch);
+                            EventType nextPunchType = EventType.values()[rs.getInt("eventtypeid")];
+
+                            if (nextPunchType == EventType.CLOCK_OUT || nextPunchType == EventType.TIME_OUT){
+                                Punch punch = find(rs.getInt("id"));
+
+                                punches.add(punch);
+                            }
                         }
                     }
                 }
