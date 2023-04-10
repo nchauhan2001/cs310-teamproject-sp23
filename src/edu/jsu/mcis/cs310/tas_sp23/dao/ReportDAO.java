@@ -10,8 +10,8 @@ import java.sql.*;
 
 public class ReportDAO {
     
-    private static final String QUERY_SUMMARY = "SELECT * FROM employee WHERE departmentid = ? ORDER BY lastname";
-    private static final String QUERY_SUMMARY2 = "SELECT * FROM employee ORDER BY lastname";
+    private static final String QUERY_SUMMARY = "SELECT * FROM employee WHERE departmentid = ? ORDER BY lastname, firstname, middlename";
+    private static final String QUERY_SUMMARY2 = "SELECT * FROM employee ORDER BY lastname, firstname, middlename";
     
     private final DAOFactory daoFactory;
 
@@ -28,40 +28,53 @@ public class ReportDAO {
         
         PreparedStatement ps = null;
         ResultSet rs = null;
+        boolean hasresults;
 
         try {
 
             Connection conn = daoFactory.getConnection();
 
             if (conn.isValid(0)) {
-
-                ps = conn.prepareStatement(QUERY_SUMMARY);
-                int departmentID = Integer.parseInt(id.toString());
-                ps.setInt(1, departmentID);
-
-                boolean hasresults = ps.execute();
-
+                
+                if (id == null){
+                    ps = conn.prepareStatement(QUERY_SUMMARY2);
+                    hasresults = ps.execute();
+                }
+                else{
+                    ps = conn.prepareStatement(QUERY_SUMMARY);
+                    ps.setInt(1, Integer.parseInt(id.toString()));
+                    hasresults = ps.execute();
+                }
+                
                 if (hasresults) {
 
                     rs = ps.getResultSet();
 
                     while (rs.next()) {
                         JsonObject jsonObject = new JsonObject();
-                        
+
                         String badgeid = rs.getString("badgeid");
                         BadgeDAO badgedao = daoFactory.getBadgeDAO();
                         Badge badge = badgedao.find(badgeid);
+                        int departmentID;
+                        
+                        if (id != null){
+                            departmentID = Integer.parseInt(id.toString());
+                        }
+                        else{
+                            departmentID = rs.getInt("departmentid");
+                        }
                         
                         DepartmentDAO departmentdao = daoFactory.getDepartmentDAO();
-                        Department department = departmentdao.find(departmentID);
                         
+                        Department department = departmentdao.find(departmentID);
+                        jsonObject.put("department", department.getDescription());
                         jsonObject.put("name", badge.getDescription());
                         jsonObject.put("badgeid", badgeid);
-                        jsonObject.put("department", department.getDescription());
                         
                         int employeeTypeid = rs.getInt("employeetypeid");
                         EmployeeType employeeType = EmployeeType.values()[employeeTypeid];
-                        
+
                         String type;
                         if (employeeType.equals(EmployeeType.FULL_TIME)){
                             type = "Full-Time Employee";
@@ -69,14 +82,13 @@ public class ReportDAO {
                         else{
                             type = "Temporary Employee";
                         }
-                        
+
                         jsonObject.put("type", type);
-                        
+
                         jsonArray.add(jsonObject);
                     }
                     s = Jsoner.serialize(jsonArray);
                 }
-
             }
 
         } catch (SQLException e) {
