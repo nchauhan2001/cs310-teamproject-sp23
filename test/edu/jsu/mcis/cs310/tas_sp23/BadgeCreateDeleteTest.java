@@ -79,5 +79,56 @@ public class BadgeCreateDeleteTest {
         assertEquals(true, result);
 
     }
+    @Test
+    public void testCreateBadge3() {
+        
+        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+
+        /* Create New Badge Object */
+
+        Badge b3 = new Badge("Deems, James D");
+        
+        /* Insert New Badge (delete first in case badge already exists) */
+        
+        badgeDAO.delete(b3.getId());
+        boolean result = badgeDAO.create(b3);
+
+        /* Compare Badge to Expected Value */
+        
+        assertEquals("#CD05B01A (Deems, James D)", b3.toString());
+        
+        /* Check Insertion Result */
+        
+        assertEquals(true, result);
+
+    }
+    
+    @Test
+    public void testDeleteBadge2() {
+        
+        BadgeDAO badgeDAO = daoFactory.getBadgeDAO();
+
+        /* Create New Badge Object */
+
+        Badge b4 = new Badge("Sharp, Matt R");
+        
+        /* Insert New Badge (delete first in case badge already exists) */
+        
+        badgeDAO.delete(b4.getId());
+        badgeDAO.create(b4);
+        
+        /* Delete New Badge */
+        
+        boolean result = badgeDAO.delete(b4.getId());
+
+        /* Compare Badge to Expected Value */
+        
+        assertEquals("#D79B32B4 (Sharp, Matt R)", b4.toString());
+        
+        /* Check Deletion Result */
+        
+        assertEquals(true, result);
+
+    }
     
 }

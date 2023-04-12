@@ -73,5 +73,88 @@ public class Version2_BadgeSummaryTest {
         assertEquals(jsonExpected, jsonActual);
 
     }
+    @Test
+    public void testBadgeSummaryByDepartment2() {
+        
+        JsonArray jsonExpected = null, jsonActual = null;
+        
+        try {
+        
+            String jsonExpectedString = "[{\"badgeid\": \"9186E711\",\"name\": \"Adams, Cruz C\",\"department\": \"Cleaning\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"DFE4EB13\",\"name\": \"Black, Jose S\",\"department\": \"Cleaning\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"2A5620A0\",\"name\": \"Eaton, Curtis M\",\"department\": \"Cleaning\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"B09A75D7\",\"name\": \"Lawrence, Fredrick C\",\"department\": \"Cleaning\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"E215F3DB\",\"name\": \"Wright, Ann T\",\"department\": \"Cleaning\",\"type\": \"Temporary Employee\"}]";
+
+            jsonExpected = (JsonArray)Jsoner.deserialize(jsonExpectedString);
+            
+            /* Get "Badge Summary" Report (Grinding Dept) */
+
+            String jsonActualString = reportDAO.getBadgeSummary(2);
+            jsonActual = (JsonArray)Jsoner.deserialize(jsonActualString);
+            
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        /* Compare to Expected Values */
+        
+        assertNotNull(jsonExpected);
+        assertNotNull(jsonActual);
+        assertEquals(jsonExpected, jsonActual);
+
+    }
+    @Test
+    public void testBadgeSummaryByDepartment3() {
+        
+        JsonArray jsonExpected = null, jsonActual = null;
+        
+        try {
+        
+            String jsonExpectedString = "[{\"badgeid\": \"95497F63\",\"name\": \"Andrews, Charles E\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"E8A58074\",\"name\": \"Brown, Maria C\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"12565C60\",\"name\": \"Chapman, Joshua E\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"BEAFDB2F\",\"name\": \"Clark, Joy R\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"55B74EB5\",\"name\": \"Coleman, Marian E\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"C457EFF7\",\"name\": \"Dam, Patricia T\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"CF1D8750\",\"name\": \"Dearman, Sarah R\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"E70AD3D2\",\"name\": \"Decker, Betty L\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"E06BE060\",\"name\": \"Dixon, Mary A\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"124A2DED\",\"name\": \"Ford, Nicholas R\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"DFD9BB5C\",\"name\": \"Gallegos, Phillip M\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"3DA8B226\",\"name\": \"Hamm, Doris R\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"08D745A6\",\"name\": \"Harris, Christine R\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"4E6E296E\",\"name\": \"Hart, Jessie B\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"9BD0258A\",\"name\": \"Hearn, Edith M\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"2CD387C2\",\"name\": \"Horner, Nicholas M\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"8C0644BA\",\"name\": \"Jones, Debra T\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"76118CDC\",\"name\": \"Kaiser, Fay H\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"8D6362AD\",\"name\": \"McGruder, Patricia W\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"9973DBF1\",\"name\": \"Miller, Alison M\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"F1EE0555\",\"name\": \"Montgomery, Dorothy A\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"D1D2C387\",\"name\": \"Omara, Sherri S\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"3E9E0E87\",\"name\": \"Patterson, Mauricio N\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"9E0476B5\",\"name\": \"Rivers, Sarah R\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"408B195F\",\"name\": \"Robinson, Lawrence D\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"76B87761\",\"name\": \"Rohrbach, Diana T\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"398B1563\",\"name\": \"Sanchez, Juan T\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"D4F37E6F\",\"name\": \"Sanchez, Raymond V\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"860CBBEE\",\"name\": \"Simmons, Willie J\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"4E04B5FE\",\"name\": \"Smith, Mary J\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"CB99D1E8\",\"name\": \"Speier, Bobbie J\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"58EB7EA1\",\"name\": \"Stalker, Karen C\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"4DAC9951\",\"name\": \"Stein, Richard M\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"93313988\",\"name\": \"Taylor, Steven M\",\"department\": \"Hafting\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"FCE87D9F\",\"name\": \"Tucker, Janice W\",\"department\": \"Hafting\",\"type\": \"Full-Time Employee\"}]";
+
+            jsonExpected = (JsonArray)Jsoner.deserialize(jsonExpectedString);
+            
+            /* Get "Badge Summary" Report (Grinding Dept) */
+
+            String jsonActualString = reportDAO.getBadgeSummary(5);
+            jsonActual = (JsonArray)Jsoner.deserialize(jsonActualString);
+            
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        /* Compare to Expected Values */
+        
+        assertNotNull(jsonExpected);
+        assertNotNull(jsonActual);
+        assertEquals(jsonExpected, jsonActual);
+
+    }
+    @Test
+    public void testBadgeSummaryByDepartment4() {
+        
+        JsonArray jsonExpected = null, jsonActual = null;
+        
+        try {
+        
+            String jsonExpectedString = "[{\"badgeid\": \"AC239E44\",\"name\": \"Cusson, Peter H\",\"department\": \"Maintenance\",\"type\": \"Temporary Employee\"},{\"badgeid\": \"3282F212\",\"name\": \"Smith, Patrick R\",\"department\": \"Maintenance\",\"type\": \"Full-Time Employee\"},{\"badgeid\": \"E77BFAEA\",\"name\": \"Weedman, Micheal S\",\"department\": \"Maintenance\",\"type\": \"Temporary Employee\"}]";
+            jsonExpected = (JsonArray)Jsoner.deserialize(jsonExpectedString);
+            
+            /* Get "Badge Summary" Report (Grinding Dept) */
+
+            String jsonActualString = reportDAO.getBadgeSummary(10);
+            jsonActual = (JsonArray)Jsoner.deserialize(jsonActualString);
+            
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        /* Compare to Expected Values */
+        
+        assertNotNull(jsonExpected);
+        assertNotNull(jsonActual);
+        assertEquals(jsonExpected, jsonActual);
+
+    }
     
 }
