@@ -8,21 +8,46 @@ import java.time.LocalDate;
 import java.sql.*;
 import java.time.DayOfWeek;
 import java.time.temporal.TemporalAdjusters;
-
+/**
+ * <p> JAVADOC - CLASS </p>
+ * @author wahic
+ */
 public class AbsenteeismDAO {
-
+   /**
+    * <p> JAVADOC - FIELD </p>
+    * @author wahic
+    */
     private final DAOFactory daoFactory;
-    
+   /**
+    * <p> JAVADOC - FIELD </p>
+    * @author wahic
+    */
     private static final String QUERY_FIND = "SELECT * FROM absenteeism WHERE employeeid = ? AND payperiod = ?";
+   /**
+    * <p> JAVADOC - FIELD </p>
+    * @author wahic
+    */
     private static final String QUERY_UPDATE = "UPDATE absenteeism SET percentage = ? WHERE employeeid = ? AND payperiod = ?";
+   /**
+    * <p> JAVADOC - FIELD </p>
+    * @author wahic
+    */    
     private static final String QUERY_CREATE = "INSERT INTO absenteeism (employeeid, payperiod, percentage) VALUES (?, ?, ?)";
-
+   /**
+    * <p> JAVADOC - METHOD </p>
+    * @author wahic
+    */
     AbsenteeismDAO( DAOFactory daoFactory) {
 
         this.daoFactory = daoFactory;
 
     }
-    
+   /**
+    * <p> JAVADOC - METHOD </p>
+    * @param x
+    * @return y
+    * @author wahic
+    */
     public Absenteeism find(Employee employee, LocalDate localDate) {
         Absenteeism absenteeism = null;
 
@@ -39,7 +64,9 @@ public class AbsenteeismDAO {
                 ps.setInt(1, employee.getId());
                 LocalDate payPeriod = localDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
                 ps.setDate(2, Date.valueOf(payPeriod));
-
+               /**
+                * <[> JAVADOC - FIELD </p>
+                */
                 boolean hasresults = ps.execute();
 
                 if (hasresults) {
@@ -80,11 +107,17 @@ public class AbsenteeismDAO {
             }
 
         }
-
+       /**
+        * <p> JAVADOC - TYPE </p>
+        * @author wahic
+        */
         return absenteeism;
 
     }
-    
+    /**
+     * <p> JAVADOC - TYPE </p>
+     * @author wahic
+     */
     public int create(Absenteeism absenteeism) {
         
         int key = 0;
@@ -114,7 +147,10 @@ public class AbsenteeismDAO {
                         ps.setDate(2, Date.valueOf(payPeriod));
                         ps.setBigDecimal(3, absenteeism.getPercentage());
                     }
-                    
+                   /**
+                    * <p> JAVADOC - FIELD </p>
+                    * @author wahic
+                    */
                     int result = ps.executeUpdate();
                     if (result > 0) {
 
@@ -146,7 +182,10 @@ public class AbsenteeismDAO {
                     }
                 }
             }         
-        
+        /**
+         * <p> JAVADOC - TYPE </p>
+         * @author wahic
+        */
         return key;
         
     }
