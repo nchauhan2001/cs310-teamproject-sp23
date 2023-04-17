@@ -3,6 +3,11 @@ package edu.jsu.mcis.cs310.tas_sp23;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ *
+ * @author Team C
+ * <p>  provides an Employee model object class which will be used to represent employees. </p>
+ */
 public class Employee {
     
     private int id;
@@ -13,6 +18,18 @@ public class Employee {
     private Shift shift;
     private EmployeeType employeeType;
     
+    /**
+     *
+     * @param id employee's identification number of type int
+     * @param firstName employee's first name of type String
+     * @param middleName employee's middle name of type String 
+     * @param lastName employee's last name of type String
+     * @param active employee's active status of type LocalDateTime
+     * @param badge employee's badge identification of type Badge
+     * @param department employee's active department of type Department
+     * @param shift employee's shift of type Shift
+     * @param employeeType employee's shift type of type EmployeeType
+     */
     public Employee(int id, String firstName, String middleName, String lastName, LocalDateTime active, Badge badge, Department department, Shift shift, EmployeeType employeeType) {
         
         this.id = id;
@@ -27,42 +44,92 @@ public class Employee {
         
     }
     
+    /**
+     *
+     * @return
+     * <p> getId getter method with type int that returns an id  </p>
+     */
     public int getId() {
         return id;
     }
     
+    /**
+     *
+     * @return
+     * <p> getFirstName getter method with type String that returns the employee's first name  </p>
+     */
     public String getFirstName() {
         return firstName;
     }
     
+    /**
+     *
+     * @return
+     * <p> getMiddleName getter method with type String that returns the employee's middle name  </p>
+     */
     public String getMiddleName() {
         return middleName;
     }
     
+    /**
+     *
+     * @return
+     * <p> getLastName getter method with type String that returns the employee's last name  </p>
+     */
     public String getLastName() {
         return lastName;
     }
     
+    /**
+     *
+     * @return
+     * <p> getActive getter method with type LocalDateTime that returns active status  </p>
+     */
     public LocalDateTime getActive() {
         return active;
     }
     
+    /**
+     *
+     * @return
+     * <p> getBadge getter method with type Badge that returns badge </p>
+     */
     public Badge getBadge() {
         return badge;
     }
     
+    /**
+     *
+     * @return
+     * <p> getDepartment getter method with type Department that returns department </p>
+     */
     public Department getDepartment() {
         return department;
     }
     
+    /**
+     *
+     * @return
+     * <p> getShift getter method with type Shift that returns shift </p>
+     */
     public Shift getShift() {
         return shift;
     }
     
+    /**
+     *
+     * @return
+     * <p> getEmployeeType getter method with type Employee type that returns the employee type </p>
+     */
     public EmployeeType getEmployeeType() {
         return employeeType;
     }
     
+    /**
+     *
+     * @return
+     * <p> toString method </p>
+     */
     @Override
     public String toString() {
         
