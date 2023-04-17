@@ -336,30 +336,6 @@ public class ReportDAO {
                         LocalDateTime adjustedTimeStamp = rs.getTimestamp("adjustedtimestamp") != null ? rs.getTimestamp("adjustedtimestamp").toLocalDateTime() : null;
                         String notes = rs.getString("notes");
 
-                        if (punchTypeID == EventType.CLOCK_OUT.ordinal()) {
-                            TimeCard timeCard = new TimeCard(employeeID, originalTimeStamp, adjustedTimeStamp, punchTypeID, notes);
-                            TimeCardDAO timeCardDAO = daoFactory.getTimeCardDAO();
-                            timeCardDAO.calculateTotalHours(timeCard);
-
-                            if (timeCard.getTotalHours() > 0) {
-                                JsonObject jsonObject = new JsonObject();
-                                jsonObject.put("badgeid", badgeID);
-                                jsonObject.put("name", firstName + " " + (middleName != null ? middleName + " " : "") + lastName);
-                                jsonObject.put("department", departmentID != null ? departmentdao.find(departmentID).getDescription() : departmentdao.find(rs.getInt("departmentid")).getDescription());
-                                jsonObject.put("shift", shift);
-                                jsonObject.put("employeeType", type.toString());
-                                jsonObject.put("regularHours", String.format("%.\", timeCard.getRegularHours()));\n"
-                                        + "jsonObject.put(\"overtimeHours\", String.format(\"%.2f\", timeCard.getOvertimeHours()));\n"
-                                        + "jsonObject.put(\"totalHours\", String.format(\"%.2f\", timeCard.getTotalHours()));\n"
-                                        + "jsonArray.add(jsonObject);\n" +
-                            
-                        
                     
-                
-            
-        
-    
-
-"}
 
 }
