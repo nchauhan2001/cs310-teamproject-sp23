@@ -335,7 +335,5 @@ public class ReportDAO {
                         LocalDateTime originalTimeStamp = rs.getTimestamp("originaltimestamp").toLocalDateTime();
                         LocalDateTime adjustedTimeStamp = rs.getTimestamp("adjustedtimestamp") != null ? rs.getTimestamp("adjustedtimestamp").toLocalDateTime() : null;
                         String notes = rs.getString("notes");
-
-                    
-
-}
+                    }
+                }

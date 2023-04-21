@@ -11,38 +11,33 @@ import java.time.temporal.TemporalAdjusters;
 
 /**
  * <p>
- * JAVADOC - CLASS </p>
+ * This is the class that serves as the data accessor for
+ * Absenteeism.java. </p>
  *
- * @author wahic
+ * @author Team C
  */
 public class AbsenteeismDAO {
 
-    /**
-     * <p>
-     * JAVADOC - FIELD </p>
-     *
-     * @author wahic
-     */
     private final DAOFactory daoFactory;
     /**
      * <p>
      * JAVADOC - FIELD </p>
      *
-     * @author wahic
+     * @author Team C
      */
     private static final String QUERY_FIND = "SELECT * FROM absenteeism WHERE employeeid = ? AND payperiod = ?";
     /**
      * <p>
      * JAVADOC - FIELD </p>
      *
-     * @author wahic
+     * @author Team C
      */
     private static final String QUERY_UPDATE = "UPDATE absenteeism SET percentage = ? WHERE employeeid = ? AND payperiod = ?";
     /**
      * <p>
      * JAVADOC - FIELD </p>
      *
-     * @author wahic
+     * @author Team C
      */
     private static final String QUERY_CREATE = "INSERT INTO absenteeism (employeeid, payperiod, percentage) VALUES (?, ?, ?)";
 
@@ -50,7 +45,7 @@ public class AbsenteeismDAO {
      * <p>
      * JAVADOC - METHOD </p>
      *
-     * @author wahic
+     * @author Team C
      */
     AbsenteeismDAO(DAOFactory daoFactory) {
 
@@ -64,7 +59,7 @@ public class AbsenteeismDAO {
      *
      * @param x
      * @return y
-     * @author wahic
+     * @author Team C
      */
     public Absenteeism find(Employee employee, LocalDate localDate) {
         Absenteeism absenteeism = null;
@@ -83,7 +78,9 @@ public class AbsenteeismDAO {
                 LocalDate payPeriod = localDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
                 ps.setDate(2, Date.valueOf(payPeriod));
                 /**
-                 * <[> JAVADOC - FIELD </p>
+                 * <p> JAVADOC - FIELD </p>
+                 * 
+                 * @author Team C
                  */
                 boolean hasresults = ps.execute();
 
@@ -129,7 +126,7 @@ public class AbsenteeismDAO {
          * <p>
          * JAVADOC - TYPE </p>
          *
-         * @author wahic
+         * @author Team C
          */
         return absenteeism;
 
@@ -139,7 +136,7 @@ public class AbsenteeismDAO {
      * <p>
      * JAVADOC - TYPE </p>
      *
-     * @author wahic
+     * @author Team C
      */
     public int create(Absenteeism absenteeism) {
 
